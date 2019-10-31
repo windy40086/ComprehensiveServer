@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 //频道类
 public class Channel implements Runnable, IType {
@@ -42,6 +43,13 @@ public class Channel implements Runnable, IType {
 
     //群发数据
     public void sendOthers(Message m){
+//        for(Channel other:Server.channels){
+//            if(other.user.getAccount().equals(this.user.getAccount())){
+//                continue;
+//            }
+//            other.send(m);
+//        }
+        //根据Socket来判断用户
         for(Channel other:Server.channels){
             if(other==this){
                 continue;
@@ -52,6 +60,13 @@ public class Channel implements Runnable, IType {
 
     //登录消息
     public void system_login_msg(Message m){
+//        for(Channel other:Server.channels){
+//            if(other.user.getAccount().equals(this.user.getAccount())){
+//                other.send(m);
+//                break;
+//            }
+//        }
+        //根据Socket来判断用户是否为自己
         this.send(m);
     }
 
@@ -62,6 +77,15 @@ public class Channel implements Runnable, IType {
         }catch (Exception e){
             Server.channels.remove(this);
             return null;
+        }
+    }
+
+    //检测此频道的用户是否还在线
+    public void isAlive() {
+        try {
+            user.getClient().getKeepAlive();
+        } catch (SocketException e) {
+            Server.channels.remove(this);
         }
     }
 
