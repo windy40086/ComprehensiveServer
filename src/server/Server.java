@@ -27,6 +27,7 @@ public class Server {
             Channel channel = new Channel(u);
             channels.add(channel);
             new Thread(channel).start();
+            
         }
     }
 }
