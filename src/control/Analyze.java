@@ -39,7 +39,7 @@ class Analyze implements IType {
 
         //判断消息是否不是用户消息
         if(mi.getType()!=TYPE_RELAY){
-            //如果是
+            
         }
 
         return new Message(mi.getType(), mi.getMsg(), mi.getAccount(), mi.getPassword(), mi.getTime());
