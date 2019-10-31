@@ -1,4 +1,4 @@
 <?xml version="1.0" ?>
 <config>
-    <serverport>8888</serverport>
+    <serverport>10443</serverport>
 </config>

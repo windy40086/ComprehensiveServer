@@ -2,6 +2,7 @@ package control;
 
 import entity.Message;
 import entity.User;
+import inter.IType;
 import server.Server;
 import util.CloseUtil;
 
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 //频道类
-public class Channel implements Runnable {
+public class Channel implements Runnable, IType {
     private User user;
     private DataInputStream dis;
     private DataOutputStream dos;
@@ -35,7 +36,6 @@ public class Channel implements Runnable {
         try {
             StreamService.sendMsg(user.getClient(), m.toString());
         } catch (IOException e) {
-            e.printStackTrace();
             Server.channels.remove(this);
         }
     }
@@ -50,12 +50,16 @@ public class Channel implements Runnable {
         }
     }
 
+    //登录消息
+    public void system_login_msg(Message m){
+        this.send(m);
+    }
+
     //接受数据
     public String receive(){
         try {
             return StreamService.reciMsg(user.getClient());
         }catch (Exception e){
-            e.printStackTrace();
             Server.channels.remove(this);
             return null;
         }
@@ -65,7 +69,17 @@ public class Channel implements Runnable {
     public void run() {
         while(isRunning){
             String s = receive();
-            sendOthers(Analyze.analyzeMessage(s));
+            Message msg = Analyze.analyzeMessage(s);
+            switch (msg.getType()){
+                case TYPE_LOGIN:
+                    system_login_msg(msg);
+                    break;
+                case TYPE_RELAY:
+                    sendOthers(msg);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -44,7 +44,8 @@ public class DBUtil {
 		}
 
 	}
-	
+
+	//增加 删除 修改
 	public static boolean executeUpdate(String sql,Object[] params) {
 		try {
 			int count = createPreSta(sql, params).executeUpdate();
@@ -58,6 +59,7 @@ public class DBUtil {
 		return false;
 	}
 
+	//查询
 	public static ResultSet executeQuery(String sql, Object[] params) {
 		try {
 			return createPreSta(sql,params).executeQuery();

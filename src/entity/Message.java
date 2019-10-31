@@ -1,22 +1,50 @@
 package entity;
 
-public class Message {
+import inter.IType;
+
+public class Message implements IType {
+    private String type;
     private String msg;
-    private String msgAccount;
+    private String account;
+    private String receiver;
+    private String password;
     private String createTime;
 
-    public Message(String msg, String msgAccount, String createTime) {
+    //系统消息
+    public Message(String type, String msg, String account, String password, String createTime) {
+        this.type = type;
         this.msg = msg;
-        this.msgAccount = msgAccount;
+        this.account = account;
+        this.password = password;
         this.createTime = createTime;
+    }
+
+    //用户消息
+    public Message(String type, String msg, String account, String receiver) {
+        this.type = type;
+        this.msg = msg;
+        this.account = account;
+        this.receiver = receiver;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getMsg() {
         return msg;
-    }
-
-    public String getMsgAccount() {
-        return msgAccount;
     }
 
     public String getCreateTime() {
@@ -24,6 +52,33 @@ public class Message {
     }
 
     public String toString(){
-        return "account="+msgAccount+"&msg="+msg;
+        switch (type) {
+            case TYPE_SYSTEM:
+                return toSystem();
+            case TYPE_LOGIN:
+                return toLogin();
+            case TYPE_REGISTER:
+                return toRegister();
+            case TYPE_RELAY:
+                return toRelay();
+            default:
+                return null;
+        }
+    }
+
+    public String toLogin() {
+        return TYPE + "=" + type + "&" + MSG + "=" + msg;
+    }
+
+    public String toRegister() {
+        return TYPE + "=" + type + "&" + MSG + "=" + msg;
+    }
+
+    public String toSystem() {
+        return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg;
+    }
+
+    public String toRelay() {
+        return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg;
     }
 }
