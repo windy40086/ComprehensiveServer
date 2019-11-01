@@ -13,7 +13,6 @@ class Analyze implements IType, IError {
     static Message analyzeMessage(String text) {
 
         String[] strs = text.split("&");
-        Message msg = new Message();
         MsgInfo mi = new MsgInfo();
 
         for (String str : strs) {
@@ -45,34 +44,63 @@ class Analyze implements IType, IError {
         }
 
         //判断消息是否是用户消息
-        if(mi.getType().equals(TYPE_RELAY)){
-            msg.setType(mi.getType());
-            msg.setAccount(mi.getAccount());
-            msg.setMsg(mi.getMsg());
-            return msg;
-        }
-        //登陆消息
-        else if(mi.getType().equals(TYPE_LOGIN)){
-            msg.setType(mi.getType());
-            if(mi.getAccount().equals("123")&&mi.getPassword().equals("456")){
-                msg.setResult("1");
-                msg.setError(ERROR_NONE+"");
-                return msg;
-            }else{
-                msg.setResult("0");
-                msg.setError(ERROR_LOGIN+"");
-                return msg;
-            }
-        }
-        //注册消息
-        else if(mi.getType().equals(TYPE_REGISTER)){
-
-        }
-        //系统消息
-        else if(mi.getType().equals(TYPE_SYSTEM)){
-
+        switch (mi.getType()) {
+            case TYPE_RELAY:
+                return toRelayMsg(mi);
+            //登陆消息
+            case TYPE_LOGIN:
+                return toLoginMsg(mi);
+            //注册消息
+            case TYPE_REGISTER:
+                return toRegisterMsg(mi);
+            //系统消息
+            case TYPE_SYSTEM:
+                return toSystemMsg(mi);
         }
 
         return null;
+    }
+
+    //将分析的信息进行转换
+    //转为用户信息
+    private static Message toRelayMsg(MsgInfo mi){
+        Message msg = new Message();
+        msg.setType(mi.getType());
+        msg.setAccount(mi.getAccount());
+        msg.setMsg(mi.getMsg());
+        return msg;
+    }
+
+    //转为登录信息
+    private static Message toLoginMsg(MsgInfo mi){
+        Message msg = new Message();
+        msg.setType(mi.getType());
+        //判断账号密码
+
+        //这里需要数据库读取判断账号密码
+
+        //需要判断账号到底是Email还是phone
+        if(mi.getAccount().equals("123")&&mi.getPassword().equals("456")){
+
+            msg.setResult("1");
+            msg.setError(ERROR_NONE+"");
+            return msg;
+        }else{
+            msg.setResult("0");
+            msg.setError(ERROR_LOGIN+"");
+            return msg;
+        }
+    }
+
+    //转为注册信息
+    private static Message toRegisterMsg(MsgInfo mi){
+        Message msg = new Message();
+        return msg;
+    }
+
+    //转为系统信息
+    private static Message toSystemMsg(MsgInfo mi){
+        Message msg = new Message();
+        return msg;
     }
 }
