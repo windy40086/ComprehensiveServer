@@ -2,12 +2,24 @@ package entity;
 
 public class MsgInfo {
     private String type;
+
+    private String account;
     private String password;
     private String msg;
-    private String account;
+    private String receive;
+    private String error;
+
     private String time;
 
     public MsgInfo() {
+    }
+
+    public String getReceive() {
+        return receive;
+    }
+
+    public void setReceive(String receive) {
+        this.receive = receive;
     }
 
     public void setType(String type) {
@@ -28,6 +40,14 @@ public class MsgInfo {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public String getType() {

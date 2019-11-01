@@ -40,6 +40,11 @@ public interface IType {
     //消息主体
     String MSG = "msg";
 
+    //错误
+    String ERR = "error";
+
+    //返回类型
+    String RESULT = "result";
     /*
     例：
     public String toLogin(){

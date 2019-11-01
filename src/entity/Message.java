@@ -1,54 +1,86 @@
 package entity;
 
+import inter.IError;
 import inter.IType;
 
-public class Message implements IType {
+public class Message implements IType, IError {
     private String type;
-    private String msg;
+
     private String account;
-    private String receiver;
     private String password;
+    private String receiver;
+    private String msg;
+    private String result;
+    private String error;
+
     private String createTime;
 
-    //系统消息
-    public Message(String type, String msg, String account, String password, String createTime) {
-        this.type = type;
-        this.msg = msg;
-        this.account = account;
-        this.password = password;
-        this.createTime = createTime;
-    }
+    public Message(){
 
-    //用户消息
-    public Message(String type, String msg, String account, String receiver) {
-        this.type = type;
-        this.msg = msg;
-        this.account = account;
-        this.receiver = receiver;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public String getReceiver() {
-        return receiver;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getMsg() {
         return msg;
     }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     public String getCreateTime() {
         return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public String toString(){
@@ -67,7 +99,7 @@ public class Message implements IType {
     }
 
     public String toLogin() {
-        return TYPE + "=" + type + "&" + MSG + "=" + msg;
+        return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;
     }
 
     public String toRegister() {

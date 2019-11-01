@@ -70,6 +70,18 @@ public class Channel implements Runnable, IType {
         this.send(m);
     }
 
+    //注册消息
+    public void system_register_msg(Message m){
+        this.send(m);
+    }
+
+    //系统消息
+    public void system_msg(Message m){
+        for(Channel ch:Server.channels){
+            ch.send(m);
+        }
+    }
+
     //接受数据
     public String receive(){
         try {
@@ -77,15 +89,6 @@ public class Channel implements Runnable, IType {
         }catch (Exception e){
             Server.channels.remove(this);
             return null;
-        }
-    }
-
-    //检测此频道的用户是否还在线
-    public void isAlive() {
-        try {
-            user.getClient().getKeepAlive();
-        } catch (SocketException e) {
-            Server.channels.remove(this);
         }
     }
 
@@ -100,6 +103,12 @@ public class Channel implements Runnable, IType {
                     break;
                 case TYPE_RELAY:
                     sendOthers(msg);
+                    break;
+                case TYPE_REGISTER:
+                    system_register_msg(msg);
+                    break;
+                case TYPE_SYSTEM:
+                    system_msg(msg);
                     break;
                 default:
                     break;

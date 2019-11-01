@@ -20,15 +20,6 @@ public class Server {
         ServerSocket ss = new ServerSocket(port);
         System.out.println(ss.getLocalSocketAddress());
 
-        //心跳检测
-        new Thread(() -> {
-            while (true) {
-                for (int i = 0; i < channels.size(); i++) {
-                    channels.get(i).isAlive();
-                }
-            }
-        }).start();
-
         //开始接受客户端
         while(true){
             try {
