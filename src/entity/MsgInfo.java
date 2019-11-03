@@ -51,6 +51,9 @@ public class MsgInfo {
     }
 
     public String getType() {
+        if(type == null){
+            return "0";
+        }
         return type;
     }
 

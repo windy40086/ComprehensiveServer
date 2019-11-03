@@ -38,11 +38,12 @@ public class Channel implements Runnable, IType {
             StreamService.sendMsg(user.getClient(), m.toString());
         } catch (IOException e) {
             Server.channels.remove(this);
+            System.out.println(this + "已经断开");
         }
     }
 
     //群发数据
-    public void sendOthers(Message m){
+    public void sendOthers(Message m) {
 //        for(Channel other:Server.channels){
 //            if(other.user.getAccount().equals(this.user.getAccount())){
 //                continue;
@@ -50,8 +51,8 @@ public class Channel implements Runnable, IType {
 //            other.send(m);
 //        }
         //根据Socket来判断用户
-        for(Channel other:Server.channels){
-            if(other==this){
+        for (Channel other : Server.channels) {
+            if (other == this) {
                 continue;
             }
             other.send(m);
@@ -59,7 +60,7 @@ public class Channel implements Runnable, IType {
     }
 
     //登录消息
-    public void system_login_msg(Message m){
+    public void system_login_msg(Message m) {
 //        for(Channel other:Server.channels){
 //            if(other.user.getAccount().equals(this.user.getAccount())){
 //                other.send(m);
@@ -71,22 +72,23 @@ public class Channel implements Runnable, IType {
     }
 
     //注册消息
-    public void system_register_msg(Message m){
+    public void system_register_msg(Message m) {
         this.send(m);
     }
 
     //系统消息
-    public void system_msg(Message m){
-        for(Channel ch:Server.channels){
+    public void system_msg(Message m) {
+        for (Channel ch : Server.channels) {
             ch.send(m);
         }
     }
 
     //接受数据
-    public String receive(){
+    public String receive() {
         try {
             return StreamService.reciMsg(user.getClient());
-        }catch (Exception e){
+        } catch (Exception e) {
+            System.out.println(this + "已经断开");
             Server.channels.remove(this);
             return null;
         }
@@ -94,10 +96,14 @@ public class Channel implements Runnable, IType {
 
     @Override
     public void run() {
-        while(isRunning){
+        while (isRunning) {
             String s = receive();
+            if (s == null) {
+                return;
+            }
+            System.out.println("接收到" + this + "的消息：" + s);
             Message msg = Analyze.analyzeMessage(s);
-            switch (msg.getType()){
+            switch (msg.getType()) {
                 case TYPE_LOGIN:
                     system_login_msg(msg);
                     break;

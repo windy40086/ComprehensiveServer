@@ -11,6 +11,10 @@ public interface IError {
     int ERROR_LOGIN_MISMATCH = 11002;
     int ERROR_LOGIN_ACCOUNT_IS_BAN = 11003;
 
+    //Msg error
+
+    int ERROR_MSG_NULLPORINT = 80001;
+
     //None error
     int ERROR_NONE = 99999;
 }

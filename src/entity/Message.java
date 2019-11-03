@@ -4,16 +4,16 @@ import inter.IError;
 import inter.IType;
 
 public class Message implements IType, IError {
-    private String type;
+    private String type = null;
 
-    private String account;
-    private String password;
-    private String receiver;
-    private String msg;
-    private String result;
-    private String error;
+    private String account = null;
+    private String password = null;
+    private String receiver = null;
+    private String msg = null;
+    private String result = null;
+    private String error = null;
 
-    private String createTime;
+    private String createTime = null;
 
     public Message(){
 
@@ -81,6 +81,32 @@ public class Message implements IType, IError {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getString(){
+        String msg = "";
+        if(type != null){
+            msg += TYPE + ":" + type;
+        }
+        if(account != null){
+            msg += ACCOUNT + ":" + account;
+        }
+        if(password != null){
+            msg += PASSWORD + ":" + password;
+        }
+        if(receiver != null){
+            msg += RECEIVE + ":" + receiver;
+        }
+        if(this.msg != null){
+            msg += MSG + ":" + this.msg;
+        }
+        if(result != null){
+            msg += RESULT + ":" + result;
+        }
+        if(error != null){
+            msg += ERR + ":" + error;
+        }
+        return msg;
     }
 
     public String toString(){

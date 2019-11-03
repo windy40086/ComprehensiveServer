@@ -12,6 +12,7 @@ class Analyze implements IType, IError {
     //分析数据的发送方
     static Message analyzeMessage(String text) {
 
+        Message message = new Message();
         String[] strs = text.split("&");
         MsgInfo mi = new MsgInfo();
 
@@ -46,24 +47,32 @@ class Analyze implements IType, IError {
         //判断消息是否是用户消息
         switch (mi.getType()) {
             case TYPE_RELAY:
-                return toRelayMsg(mi);
+                message = toRelayMsg(mi);
+                break;
             //登陆消息
             case TYPE_LOGIN:
-                return toLoginMsg(mi);
+                message = toLoginMsg(mi);
+                break;
             //注册消息
             case TYPE_REGISTER:
-                return toRegisterMsg(mi);
+                message = toRegisterMsg(mi);
+                break;
             //系统消息
             case TYPE_SYSTEM:
-                return toSystemMsg(mi);
+                message = toSystemMsg(mi);
+                break;
+            default:
+                break;
         }
 
-        return null;
+        System.out.println("返回消息:" + message.getString());
+
+        return message;
     }
 
     //将分析的信息进行转换
     //转为用户信息
-    private static Message toRelayMsg(MsgInfo mi){
+    private static Message toRelayMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
         msg.setAccount(mi.getAccount());
@@ -72,7 +81,7 @@ class Analyze implements IType, IError {
     }
 
     //转为登录信息
-    private static Message toLoginMsg(MsgInfo mi){
+    private static Message toLoginMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
         //判断账号密码
@@ -80,27 +89,30 @@ class Analyze implements IType, IError {
         //这里需要数据库读取判断账号密码
 
         //需要判断账号到底是Email还是phone
-        if(mi.getAccount().equals("123")&&mi.getPassword().equals("456")){
+        if (mi.getAccount().equals("123") && mi.getPassword().equals("456")) {
 
             msg.setResult("1");
-            msg.setError(ERROR_NONE+"");
+            msg.setError(ERROR_NONE + "");
             return msg;
-        }else{
+        } else {
             msg.setResult("0");
-            msg.setError(ERROR_LOGIN+"");
+            msg.setError(ERROR_LOGIN + "");
             return msg;
         }
     }
 
     //转为注册信息
-    private static Message toRegisterMsg(MsgInfo mi){
+    private static Message toRegisterMsg(MsgInfo mi) {
         Message msg = new Message();
         return msg;
     }
 
     //转为系统信息
-    private static Message toSystemMsg(MsgInfo mi){
+    private static Message toSystemMsg(MsgInfo mi) {
         Message msg = new Message();
         return msg;
     }
+
+    //转为错误信息
+
 }
