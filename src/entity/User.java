@@ -14,6 +14,15 @@ public class User {
         this.client = client;
     }
 
+    public User(String account, String password) {
+        this.account = account;
+        this.password = password;
+    }
+
+    public User(Socket client) {
+        this.client = client;
+    }
+
     public Socket getClient() {
         return client;
     }
@@ -26,4 +35,11 @@ public class User {
         return password;
     }
 
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

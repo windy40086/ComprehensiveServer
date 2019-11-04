@@ -86,25 +86,25 @@ public class Message implements IType, IError {
     public String getString(){
         String msg = "";
         if(type != null){
-            msg += TYPE + ":" + type;
+            msg += TYPE + ":" + type + " ";
         }
         if(account != null){
-            msg += ACCOUNT + ":" + account;
+            msg += ACCOUNT + ":" + account + " ";
         }
         if(password != null){
-            msg += PASSWORD + ":" + password;
+            msg += PASSWORD + ":" + password + " ";
         }
         if(receiver != null){
-            msg += RECEIVE + ":" + receiver;
+            msg += RECEIVE + ":" + receiver + " ";
         }
         if(this.msg != null){
-            msg += MSG + ":" + this.msg;
+            msg += MSG + ":" + this.msg + " ";
         }
         if(result != null){
-            msg += RESULT + ":" + result;
+            msg += RESULT + ":" + result + " ";
         }
         if(error != null){
-            msg += ERR + ":" + error;
+            msg += ERR + ":" + error + " ";
         }
         return msg;
     }
@@ -119,10 +119,14 @@ public class Message implements IType, IError {
                 return toRegister();
             case TYPE_RELAY:
                 return toRelay();
+            case TYPE_ERROR:
+                return toError();
             default:
                 return null;
         }
     }
+
+    public String toError() {return TYPE + "=" + type + "&" + ERR + "=" + error;}
 
     public String toLogin() {
         return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;

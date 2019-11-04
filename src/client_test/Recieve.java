@@ -6,22 +6,18 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import entity.Message;
-
-@SuppressWarnings("unused")
 class Recieve implements Runnable {
-	// 输出流
-	private BufferedWriter console;
 	// 输入流
 	private DataInputStream dis;
 	
 	private boolean isRunnable = true;
 
-	public Recieve() {
-		console = new BufferedWriter(new OutputStreamWriter(System.out));
+	private Recieve() {
+		// 输出流
+		BufferedWriter console = new BufferedWriter(new OutputStreamWriter(System.out));
 	}
 
-	public Recieve(Socket client) {
+	Recieve(Socket client) {
 		this();
 		try {
 			dis = new DataInputStream(client.getInputStream());
@@ -32,7 +28,7 @@ class Recieve implements Runnable {
 
 	// 接受信息
 	public String getMsg() {
-		String msg = "";
+		String msg;
 		try {
 			msg = dis.readUTF();
 			return msg;
@@ -43,7 +39,7 @@ class Recieve implements Runnable {
 	}
 	
 	//发送信息
-	public void recieve(){
+	private void recieve(){
 		String msg = getMsg();
 		try {
 			if(null!=msg && !msg.equals("")){

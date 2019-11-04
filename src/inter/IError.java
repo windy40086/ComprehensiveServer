@@ -11,9 +11,14 @@ public interface IError {
     int ERROR_LOGIN_MISMATCH = 11002;
     int ERROR_LOGIN_ACCOUNT_IS_BAN = 11003;
 
-    //Msg error
+    //relay error
+    int ERROR_RELAY = 12000;
 
-    int ERROR_MSG_NULLPORINT = 80001;
+    //Server error
+
+    int ERROR_SYSTEM = 80000;
+    int ERROR_NULL_POINTER = 80001;
+    int ERROR_MSG_CANT_ANALYZE = 80002;
 
     //None error
     int ERROR_NONE = 99999;

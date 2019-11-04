@@ -72,4 +72,19 @@ public class MsgInfo {
     public String getTime() {
         return time;
     }
+
+    public boolean isTypeExist(){ return type != null;}
+
+    public boolean isAccountExist(){ return account != null;}
+
+    public boolean isPasswordExist(){ return password != null;}
+
+    public boolean isMsgExist(){ return msg != null;}
+
+    public boolean isReceiveExist(){ return receive != null;}
+
+    public boolean isErrorExist(){ return error != null;}
+
+    public boolean isTimeExist(){ return time != null;}
+
 }

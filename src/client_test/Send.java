@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import entity.Message;
-
 class Send implements Runnable{
 	//输入流
 	private BufferedReader console;
@@ -16,11 +14,11 @@ class Send implements Runnable{
 	
 	private boolean isRunnable = true;
 	
-	public Send(){
+	private Send(){
 		console = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public Send(Socket client){
+	Send(Socket client){
 		this();
 		try {
 			dos = new DataOutputStream(client.getOutputStream());
@@ -32,8 +30,7 @@ class Send implements Runnable{
 	//控制台获取发送 字符串
 	private String getMsg() {
 		try {
-			String msg = console.readLine();
-			return msg;
+			return console.readLine();
 		} catch (IOException e) {
 			isRunnable = false;
 		}
@@ -41,7 +38,7 @@ class Send implements Runnable{
 	}
 	
 	//发送信息
-	public void send(){
+	private void send(){
 		String msg = getMsg();
 		try {
 			if(null!=msg && !msg.equals("")){
