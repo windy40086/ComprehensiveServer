@@ -6,6 +6,7 @@ import entity.User;
 import inter.IError;
 import inter.IType;
 import service.LoginService;
+import service.RegisterService;
 
 import java.util.Date;
 
@@ -30,10 +31,14 @@ class Analyze implements IType, IError {
             message = MItoMsg(u, mi);
         }
 
-        //Log
-        System.out.println("返回消息:" + message.getString());
+        if(null != message){
+            //Log
+            System.out.println("返回消息:" + message.getString());
+            return message;
+        }else{
+            return null;
+        }
 
-        return message;
     }
 
 
@@ -86,11 +91,11 @@ class Analyze implements IType, IError {
                 break;
             //登陆消息
             case TYPE_LOGIN:
-                message = toLoginMsg(u, mi);
+                message = LoginService.toLoginMsg(u, mi);
                 break;
             //注册消息
             case TYPE_REGISTER:
-                message = toRegisterMsg(u, mi);
+                message = RegisterService.toRegisterMsg(u, mi);
                 break;
             //系统消息
             case TYPE_SYSTEM:
@@ -110,7 +115,7 @@ class Analyze implements IType, IError {
     private static Message toErrorMsg(User u, MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
-        msg.setError(ERROR_MSG_CANT_ANALYZE + "");
+        msg.setError(ERROR_MSG_CANT_ANALYZE);
         return msg;
     }
 
@@ -121,12 +126,14 @@ class Analyze implements IType, IError {
             return false;
         }
         switch (mi.getType()) {
-            //登录信息
+                //登录信息
             case TYPE_LOGIN:
-                return mi.getType().equals(TYPE_LOGIN) && mi.isAccountExist() && mi.isPasswordExist();
-            //用户转发信息
+                //用户注册信息
+            case TYPE_REGISTER:
+                return mi.isAccountExist() && mi.isPasswordExist();
+                //用户转发信息
             case TYPE_RELAY:
-                return mi.getType().equals(TYPE_RELAY) && mi.isAccountExist() && mi.isReceiveExist()
+                return mi.isAccountExist() && mi.isReceiveExist()
                         && mi.isMsgExist();
             default:
                 return false;
@@ -144,40 +151,6 @@ class Analyze implements IType, IError {
         msg.setReceiver(mi.getReceive());
         msg.setMsg(mi.getMsg());
         return msg;
-    }
-
-    //转为登录信息
-    private static Message toLoginMsg(User u, MsgInfo mi) {
-        LoginService ls = new LoginService();
-
-        Message msg = new Message();
-        msg.setType(mi.getType());
-        //判断账号密码
-        String account = mi.getAccount();
-        String password = mi.getPassword();
-
-        //需要判断账号到底是Email还是phone
-
-        //通过LoginService服务读取数据库信息
-        if (ls.isUserExist(new User(account, password))) {
-            //读取成功后设置 channel 的 user
-            u.setAccount(account);
-            u.setPassword(password);
-            msg.setResult(RESULT_SUCCESS);
-            msg.setError(ERROR_NONE + "");
-            System.out.println("登录成功");
-            return msg;
-        } else {
-            //读取失败则返回错误
-            msg.setResult(RESULT_FAIL);
-            msg.setError(ERROR_LOGIN + "");
-            return msg;
-        }
-    }
-
-    //转为注册信息
-    private static Message toRegisterMsg(User u, MsgInfo mi) {
-        return new Message();
     }
 
     //转为系统信息

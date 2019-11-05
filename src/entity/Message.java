@@ -15,7 +15,7 @@ public class Message implements IType, IError {
 
     private String createTime = null;
 
-    public Message(){
+    public Message() {
 
     }
 
@@ -79,37 +79,37 @@ public class Message implements IType, IError {
         return error;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setError(int error) {
+        this.error = error + "";
     }
 
-    public String getString(){
+    public String getString() {
         String msg = "";
-        if(type != null){
+        if (type != null) {
             msg += TYPE + ":" + type + " ";
         }
-        if(account != null){
+        if (account != null) {
             msg += ACCOUNT + ":" + account + " ";
         }
-        if(password != null){
+        if (password != null) {
             msg += PASSWORD + ":" + password + " ";
         }
-        if(receiver != null){
+        if (receiver != null) {
             msg += RECEIVE + ":" + receiver + " ";
         }
-        if(this.msg != null){
+        if (this.msg != null) {
             msg += MSG + ":" + this.msg + " ";
         }
-        if(result != null){
+        if (result != null) {
             msg += RESULT + ":" + result + " ";
         }
-        if(error != null){
+        if (error != null) {
             msg += ERR + ":" + error + " ";
         }
         return msg;
     }
 
-    public String toString(){
+    public String toString() {
         switch (type) {
             case TYPE_SYSTEM:
                 return toSystem();
@@ -126,14 +126,16 @@ public class Message implements IType, IError {
         }
     }
 
-    public String toError() {return TYPE + "=" + type + "&" + ERR + "=" + error;}
+    public String toError() {
+        return TYPE + "=" + type + "&" + ERR + "=" + error;
+    }
 
     public String toLogin() {
         return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;
     }
 
     public String toRegister() {
-        return TYPE + "=" + type + "&" + MSG + "=" + msg;
+        return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;
     }
 
     public String toSystem() {

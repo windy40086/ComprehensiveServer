@@ -82,10 +82,15 @@ public class Channel implements Runnable, IType {
         try {
             return StreamService.reciMsg(user.getClient());
         } catch (Exception e) {
-            System.out.println(this + "已经断开");
-            Server.channels.remove(this);
+            disconnection();
             return null;
         }
+    }
+
+    //客户端断开连接
+    private void disconnection() {
+        System.out.println(this + "已经断开");
+        Server.channels.remove(this);
     }
 
     //发送数据
@@ -93,22 +98,21 @@ public class Channel implements Runnable, IType {
         try {
             StreamService.sendMsg(user.getClient(), m.toString());
         } catch (IOException e) {
-            Server.channels.remove(this);
-            System.out.println(this + "已经断开");
+            disconnection();
         }
     }
 
     //获取自己的User信息
     private String getUserInfo() {
         if (user.getAccount() == null) {
-            return "这个Channel还未登录";
+            return this + "还未登录";
         } else {
             return "Channel:{account=" + user.getAccount() + ",password=" + user.getPassword() + "}";
         }
     }
 
     //分类发送消息
-    private void sortMsg(Message msg){
+    private void sortMsg(Message msg) {
         switch (msg.getType()) {
             case TYPE_LOGIN:
                 //转为登录返回消息
@@ -120,14 +124,14 @@ public class Channel implements Runnable, IType {
                 //再找到并发送
 
                 //如果receive为1则为默认大群
-                if(msg.getReceiver().equals("1")){
+                if (msg.getReceiver().equals("1")) {
                     sendOthers(msg);
                     break;
                 }
 
                 //在频道中找到接受人的id并发送
-                for(Channel ch:Server.channels){
-                    if(null!= ch.user.getAccount() && ch.user.getAccount().equals(msg.getReceiver())){
+                for (Channel ch : Server.channels) {
+                    if (null != ch.user.getAccount() && ch.user.getAccount().equals(msg.getReceiver())) {
                         ch.send(msg);
                     }
                 }
@@ -146,6 +150,7 @@ public class Channel implements Runnable, IType {
                 break;
         }
     }
+
     @Override
     public void run() {
         while (isRunning) {
@@ -159,8 +164,13 @@ public class Channel implements Runnable, IType {
 
             //处理消息
             Message msg = Analyze.analyzeMessage(this.user, s);
+            if (null == msg) {
+                isRunning = false;
+                disconnection();
+                continue;
+            }
 
-            //发送消息
+            //分类发送消息
             sortMsg(msg);
 
         }
