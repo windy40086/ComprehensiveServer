@@ -12,6 +12,7 @@ public interface IError {
     int ERROR_LOGIN_ACCOUNT_NOT_FIND = 11001;
     int ERROR_LOGIN_MISMATCH = 11002;
     int ERROR_LOGIN_ACCOUNT_IS_BAN = 11003;
+    int ERROR_LOGIN_ACCOUNT_IS_LOGIN = 11004;
 
     //relay error
     int ERROR_RELAY = 12000;

@@ -8,19 +8,23 @@ import javax.xml.parsers.*;
 import java.io.*;
 
 public class XMLUtil {
+
     private static Document doc;
 
-    static {
+    private static Document getDoc(String path){
         try {
             DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
             DocumentBuilder dbuild = df.newDocumentBuilder();
-            doc = dbuild.parse(new File("Comprehensive.xml"));
+            Document tdoc = dbuild.parse(new File(path));
+            return tdoc;
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static Object getBean(String name) {
+        doc = getDoc("src/xml/config_server.xml");
         try {
             NodeList nl = doc.getElementsByTagName(name);
             Node node = nl.item(0).getFirstChild();
@@ -33,6 +37,7 @@ public class XMLUtil {
     }
 
     static MysqlConfig getSqlCFG() {
+        doc = getDoc("src/xml/config_mysql.xml");
         NodeList list = doc.getElementsByTagName("mysql_config");
         MysqlConfig mc = new MysqlConfig();
         for (int i = 0; i < list.getLength(); i++) {

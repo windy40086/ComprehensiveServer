@@ -111,6 +111,10 @@ public class Channel implements Runnable, IType {
         }
     }
 
+    public String getUserAccount(){
+        return user.getAccount();
+    }
+
     //分类发送消息
     private void sortMsg(Message msg) {
         switch (msg.getType()) {

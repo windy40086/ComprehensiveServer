@@ -55,7 +55,6 @@ public class DBUtil {
         try {
             int count = createPreSta(sql, params).executeUpdate();
             return count > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,6 +66,7 @@ public class DBUtil {
         try {
             return createPreSta(sql, params).executeQuery();
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("查询错误 DBUtil 70");
             return null;
         }

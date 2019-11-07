@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <config>
-    <serverport>10443</serverport>
     <mysql_config username="root" password="root">
         <URL>jdbc:mysql://localhost:3306/</URL>
         <database>comprehensive</database>
