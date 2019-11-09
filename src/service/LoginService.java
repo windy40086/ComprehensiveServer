@@ -17,9 +17,9 @@ public class LoginService implements IType, IError {
     }
 
     //判断账号是否已经登录
-    private static boolean isUserLogin(String account){
-        for(Channel channel: Server.channels){
-            if(null != channel.getUserAccount() && channel.getUserAccount().equals(account)){
+    private static boolean isUserLogin(String account) {
+        for (Channel channel : Server.channels) {
+            if (null != channel.getUserAccount() && channel.getUserAccount().equals(account)) {
                 return true;
             }
         }
@@ -27,9 +27,9 @@ public class LoginService implements IType, IError {
     }
 
     //转为登录信息
+
     /**
-     *
-     * @param u 未登陆的channel的u，传入后如登陆成功则设置u的值
+     * @param u  未登陆的channel的u，传入后如登陆成功则设置u的值
      * @param mi 包含客户端传入的信息
      * @return 返回登录结果
      */
@@ -46,7 +46,7 @@ public class LoginService implements IType, IError {
         //需要判断账号到底是Email还是phone
 
         //判断此account是否已经登录
-        if(isUserLogin(account)){
+        if (false && isUserLogin(account)) {
             msg.setResult(RESULT_FAIL);
             msg.setError(ERROR_LOGIN_ACCOUNT_IS_LOGIN);
             return msg;

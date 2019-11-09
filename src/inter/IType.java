@@ -37,10 +37,10 @@ public interface IType {
     String ACCOUNT = "account";
 
     //接受用户
-    String RECEIVE = "receive";
+    String RECEIVE = "receiver";
 
     //消息主体
-    String MSG = "msg";
+    String MSG = "message";
 
     //错误
     String ERR = "error";

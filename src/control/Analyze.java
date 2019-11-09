@@ -159,6 +159,4 @@ class Analyze implements IType, IError {
         msg.setType(mi.getType());
         return msg;
     }
-
-
 }

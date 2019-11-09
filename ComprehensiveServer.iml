@@ -19,7 +19,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../maven/mail.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../maven/mail.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

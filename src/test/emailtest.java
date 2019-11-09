@@ -1,4 +1,4 @@
-package client_test;
+package test;
 
 import entity.Email;
 import service.EmailService;
