@@ -37,7 +37,7 @@ public interface IType {
     String ACCOUNT = "account";
 
     //接受用户
-    String RECEIVE = "receiver";
+    String RECEIVER = "receiver";
 
     //消息主体
     String MSG = "message";

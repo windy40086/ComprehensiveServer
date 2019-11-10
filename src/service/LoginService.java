@@ -46,7 +46,7 @@ public class LoginService implements IType, IError {
         //需要判断账号到底是Email还是phone
 
         //判断此account是否已经登录
-        if (false && isUserLogin(account)) {
+        if (isUserLogin(account)) {
             msg.setResult(RESULT_FAIL);
             msg.setError(ERROR_LOGIN_ACCOUNT_IS_LOGIN);
             return msg;

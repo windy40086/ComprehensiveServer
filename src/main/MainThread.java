@@ -26,7 +26,7 @@ public class MainThread {
             try {
                 Thread.sleep(1000);
                 //如服务器异常关闭，会在这里重启
-                Socket socket = Server.getServer(port).accept();
+                Socket socket = Server.getServer("10443").accept();
                 //User u = new User("windy@qq.com", "123456", socket);
                 User u = new User(socket);
                 Channel channel = new Channel(u);

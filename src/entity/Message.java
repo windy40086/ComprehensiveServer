@@ -95,7 +95,7 @@ public class Message implements IType, IError {
             msg += PASSWORD + ":" + password + " ";
         }
         if (receiver != null) {
-            msg += RECEIVE + ":" + receiver + " ";
+            msg += RECEIVER + ":" + receiver + " ";
         }
         if (this.msg != null) {
             msg += MSG + ":" + this.msg + " ";

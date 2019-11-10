@@ -65,7 +65,7 @@ class Analyze implements IType, IError {
                     case PASSWORD:
                         mi.setPassword(value);
                         break;
-                    case RECEIVE:
+                    case RECEIVER:
                         mi.setReceive(value);
                         break;
                     case ERR:

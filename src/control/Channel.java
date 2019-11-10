@@ -10,6 +10,8 @@ import util.CloseUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 //频道类
 public class Channel implements Runnable, IType {
@@ -90,6 +92,7 @@ public class Channel implements Runnable, IType {
     //客户端断开连接
     private void disconnection() {
         System.out.println(this + "已经断开");
+        CloseUtil.Close(this.dis, this.dos, this.user.getClient());
         Server.channels.remove(this);
     }
 
@@ -111,7 +114,7 @@ public class Channel implements Runnable, IType {
         }
     }
 
-    public String getUserAccount(){
+    public String getUserAccount() {
         return user.getAccount();
     }
 
@@ -165,6 +168,8 @@ public class Channel implements Runnable, IType {
             }
             System.out.println(getUserInfo());
             System.out.println("接收到" + this + "的消息：" + s);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
 
             //处理消息
             Message msg = Analyze.analyzeMessage(this.user, s);
