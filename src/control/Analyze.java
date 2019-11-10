@@ -129,7 +129,7 @@ class Analyze implements IType, IError {
         switch (mi.getType()) {
             //登录信息
             case TYPE_LOGIN:
-                //用户注册信息
+            //用户注册信息
             case TYPE_REGISTER:
                 return mi.isAccountExist() && mi.isPasswordExist();
             //用户转发信息
