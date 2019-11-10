@@ -68,5 +68,4 @@ public class LoginService implements IType, IError {
             return msg;
         }
     }
-
 }
