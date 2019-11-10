@@ -1,7 +1,6 @@
 package db;
 
 import entity.User;
-import util.DBUtil;
 
 public class UpdateDao {
 

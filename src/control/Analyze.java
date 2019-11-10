@@ -31,18 +31,18 @@ class Analyze implements IType, IError {
             message = MItoMsg(u, mi);
         }
 
-        if(null != message){
+        if (null != message) {
             //Log
-            System.out.println("返回消息:" + message.getString());
+            System.out.println("返回消息:" + message.toString());
             return message;
-        }else{
+        } else {
             return null;
         }
 
     }
 
 
-    //解析字段函数 -> 分解为MsgInfo
+    //解析字段函数 -> 分解为MsgInfo ->转变为各自的类
     private static MsgInfo analyzeMsgToMI(String[] strs) {
         MsgInfo mi = new MsgInfo();
         try {
@@ -77,6 +77,7 @@ class Analyze implements IType, IError {
         } catch (ArrayIndexOutOfBoundsException e) {
             //用户发送的信息不规范
             mi.setType(TYPE_SYSTEM);
+            mi.setError(ERROR_MSG_CANT_ANALYZE + "");
         }
         return mi;
     }
@@ -126,12 +127,12 @@ class Analyze implements IType, IError {
             return false;
         }
         switch (mi.getType()) {
-                //登录信息
+            //登录信息
             case TYPE_LOGIN:
                 //用户注册信息
             case TYPE_REGISTER:
                 return mi.isAccountExist() && mi.isPasswordExist();
-                //用户转发信息
+            //用户转发信息
             case TYPE_RELAY:
                 return mi.isAccountExist() && mi.isReceiveExist()
                         && mi.isMsgExist();

@@ -5,7 +5,7 @@ import entity.MsgInfo;
 import entity.User;
 import inter.IError;
 import inter.IType;
-import util.DBUtil;
+import db.DBUtil;
 
 import java.io.IOException;
 import java.sql.ResultSet;

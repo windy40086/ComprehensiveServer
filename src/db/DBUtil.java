@@ -1,6 +1,7 @@
-package util;
+package db;
 
 import entity.*;
+import util.XMLUtil;
 
 import java.sql.*;
 

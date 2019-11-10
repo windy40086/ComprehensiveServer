@@ -83,31 +83,6 @@ public class Message implements IType, IError {
         this.error = error + "";
     }
 
-    public String getString() {
-        String msg = "";
-        if (type != null) {
-            msg += TYPE + ":" + type + " ";
-        }
-        if (account != null) {
-            msg += ACCOUNT + ":" + account + " ";
-        }
-        if (password != null) {
-            msg += PASSWORD + ":" + password + " ";
-        }
-        if (receiver != null) {
-            msg += RECEIVER + ":" + receiver + " ";
-        }
-        if (this.msg != null) {
-            msg += MSG + ":" + this.msg + " ";
-        }
-        if (result != null) {
-            msg += RESULT + ":" + result + " ";
-        }
-        if (error != null) {
-            msg += ERR + ":" + error + " ";
-        }
-        return msg;
-    }
 
     public String toString() {
         switch (type) {
@@ -126,23 +101,23 @@ public class Message implements IType, IError {
         }
     }
 
-    public String toError() {
+    private String toError() {
         return TYPE + "=" + type + "&" + ERR + "=" + error;
     }
 
-    public String toLogin() {
+    private String toLogin() {
         return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;
     }
 
-    public String toRegister() {
+    private String toRegister() {
         return TYPE + "=" + type + "&" + RESULT + "=" + result + "&" + ERR + "=" + error;
     }
 
-    public String toSystem() {
+    private String toSystem() {
         return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg;
     }
 
-    public String toRelay() {
+    private String toRelay() {
         return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg;
     }
 }

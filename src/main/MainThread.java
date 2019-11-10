@@ -3,7 +3,6 @@ package main;
 import control.Channel;
 import entity.User;
 import server.Server;
-import util.DBUtil;
 import util.XMLUtil;
 
 import java.net.Socket;
@@ -39,5 +38,11 @@ public class MainThread {
                 e.printStackTrace();
             }
         }
+    }
+}
+
+class test{
+    public static void main(String[] args) {
+
     }
 }

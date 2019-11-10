@@ -36,7 +36,7 @@ public class XMLUtil {
         }
     }
 
-    static MysqlConfig getSqlCFG() {
+    public static MysqlConfig getSqlCFG() {
         doc = getDoc("src/xml/config_mysql.xml");
         NodeList list = doc.getElementsByTagName("mysql_config");
         MysqlConfig mc = new MysqlConfig();

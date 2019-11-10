@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 
 import entity.User;
-import util.DBUtil;
 
 public class QueryDao {
 
