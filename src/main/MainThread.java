@@ -2,6 +2,7 @@ package main;
 
 import control.Channel;
 import entity.User;
+import server.SMSServer;
 import server.Server;
 import util.XMLUtil;
 
@@ -11,10 +12,20 @@ import java.net.Socket;
 public class MainThread {
 
     public static void main(String[] args) {
-        startServer();
-//        String sql = "insert into client(account,password,jurisdiction) values(?,?,?)";
-//        Object[] params = {"windy", "123", "1"};
-//        DBUtil.executeUpdate(sql,params);
+        //MainServer
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startServer();
+            }
+        }).start();
+        //SMSServer
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startSMSServer();
+            }
+        }).start();
     }
 
     //开启主服务
@@ -39,10 +50,10 @@ public class MainThread {
             }
         }
     }
-}
 
-class test{
-    public static void main(String[] args) {
+    //开启短信验证服务
 
+    private static void startSMSServer(){
+        SMSServer.start();
     }
 }

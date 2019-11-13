@@ -176,8 +176,6 @@ public class Channel implements Runnable, IType {
 
             //分类发送消息
             sortMsg(msg);
-            //msg.send(this);
-
         }
     }
 }

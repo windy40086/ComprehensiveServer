@@ -22,7 +22,7 @@ public class QueryDao {
         try {
             ResultSet rs = DBUtil.executeQuery(sql, params);
 
-            if(null !=rs && rs.next()){
+            if (null != rs && rs.next()) {
                 return true;
             }
         } catch (SQLException e) {

@@ -1,13 +1,13 @@
 package service;
 
+import db.DBUtil;
 import entity.Message;
 import entity.MsgInfo;
 import entity.User;
 import inter.IError;
 import inter.IType;
-import db.DBUtil;
+import server.SMSServer;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
@@ -18,54 +18,188 @@ public class RegisterService implements IType, IError {
     public static Message toRegisterMsg(User u, MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
+
+        String account = mi.getAccount();
+
+        //如果包含 @
+        if (account.contains("@")) {
+            //邮箱注册
+            msg = mailboxVerification(u, mi);
+        }else {
+            //手机号注册
+            msg = phoneVerification(u, mi);
+        }
+
+        return msg;
+    }
+
+    ////////////////////////////////////////////////
+    //手机号注册
+    private static Message phoneVerification(User u, MsgInfo mi) {
+        //判断是注册信息还是验证信息
+        if (mi.isVCExist()) {
+            //如果有验证码，则验证并注册
+            return sign_up_by_phone(u, mi);
+        } else {
+            //没有注册码，则发送注册码
+            return VerificationCode_phone(mi);
+        }
+    }
+
+    //验证
+    private static Message sign_up_by_phone(User u, MsgInfo mi) {
+        Message msg = new Message();
         User temp = new User(mi.getAccount(), mi.getPassword());
-        //判断账号密码是否为正确的类型-邮件地址
+        String VC = mi.getVc();
+        //验证账号
+        boolean isVCCorrect = VCService.check(temp.getAccount(), VC);
 
-
-        //判断账号是否存在
-        if (!isAccountExist(u.getAccount())) {
-            //验证码
-            String vc = getVerificationCode();
-            String vcCheck = null;
-
-            //发送验证码邮件
-            EmailService es = new EmailService(temp.getAccount(), vc);
-            es.sendEmail();
-
-            //获取验证码
-            System.out.println(u.getClient() + "等待验证码");
-            try {
-                vcCheck = StreamService.reciMsg(u.getClient());
-            } catch (IOException e) {
-                System.err.println("客户端关闭了连接");
-                return null;
-            }
-
-            //等待5分钟
-
-
-            //如果验证码有问题
-            if (!vcCheck.equals(vc)) {
-                System.out.println(vc + " != " + vcCheck);
-                msg.setType(TYPE_REGISTER);
-                msg.setResult(RESULT_FAIL);
-                msg.setError(IError.ERROR_REGISTER_VERIFICATION_CODE_IS_WRONG);
-                return msg;
-            }
-
-            System.out.println(vc + vcCheck);
-
+        //如果账号正确
+        if (isVCCorrect) {
             //创建账号
             msg.setType(TYPE_REGISTER);
             boolean isCreateSuccess = createAccount(temp);
             if (isCreateSuccess) {
+                //创建成功则删除验证码
+                VCService.delete(temp.getAccount());
                 msg.setResult(RESULT_SUCCESS);
                 msg.setError(ERROR_NONE);
             } else {
+                //创建意外失败
                 msg.setResult(RESULT_FAIL);
                 msg.setError(ERROR_REGISTER_FAIL);
             }
         } else {
+            //验证码错误
+            msg.setType(TYPE_ERROR);
+            msg.setResult(RESULT_FAIL);
+            msg.setError(ERROR_REGISTER_VERIFICATION_CODE_IS_WRONG);
+        }
+        return msg;
+    }
+
+    //注册信息
+    private static Message VerificationCode_phone(MsgInfo mi) {
+        Message msg = new Message();
+        msg.setType(TYPE_REGISTER);
+        String account = mi.getAccount();
+
+        //判断账号密码是否为正确的类型-电话号码
+
+        //判断账号是否存在
+        if (!isAccountExist(account)) {
+            //生成验证码
+            String vc = getVerificationCode();
+
+            //判断容器内是否含有此验证码
+            if (VCService.isVCExist(account)) {
+                //如果有就直接发送
+                String send = "phoneNumber=" + mi.getAccount() + "&" + "vc=" + vc;
+                SMSServer.sendMsg(send);
+            } else {
+                //如果没有直接用生成的验证码 发送验证码 短信
+                String send = "phoneNumber=" + mi.getAccount() + "&" + "vc=" + vc;
+                SMSServer.sendMsg(send);
+
+                //将验证码和账号加入验证容器中
+                VCService.add(mi.getAccount(), vc);
+            }
+
+            System.out.println("phone验证码:" + vc);
+            //发送成功
+            msg.setResult(RESULT_SUCCESS);
+            msg.setError(ERROR_NONE);
+
+        } else {
+            //发送失败
+            msg.setResult(RESULT_FAIL);
+            msg.setError(ERROR_REGISTER_ACCOUNT_ALREADY_USE);
+        }
+        return msg;
+    }
+
+    /////////////////////////////////////////////////
+    //邮箱验证
+    private static Message mailboxVerification(User u, MsgInfo mi) {
+
+        //判断是注册信息还是验证信息
+        if (mi.isVCExist()) {
+            //如果有验证码，则验证并注册
+            return sign_up_by_email(u, mi);
+        } else {
+            //没有注册码，则发送注册码
+            return VerificationCode_email(mi);
+        }
+    }
+
+    //验证
+    private static Message sign_up_by_email(User u, MsgInfo mi) {
+        Message msg = new Message();
+        User temp = new User(mi.getAccount(), mi.getPassword());
+        String VC = mi.getVc();
+        //验证账号
+        boolean isVCCorrect = VCService.check(temp.getAccount(), VC);
+
+        //如果账号正确
+        if (isVCCorrect) {
+            //创建账号
+            msg.setType(TYPE_REGISTER);
+            boolean isCreateSuccess = createAccount(temp);
+            if (isCreateSuccess) {
+                //创建成功则删除验证码
+                VCService.delete(temp.getAccount());
+                msg.setResult(RESULT_SUCCESS);
+                msg.setError(ERROR_NONE);
+            } else {
+                //创建意外失败
+                msg.setType(TYPE_ERROR);
+                msg.setResult(RESULT_FAIL);
+                msg.setError(ERROR_REGISTER_FAIL);
+            }
+        } else {
+            //验证码错误
+            msg.setType(TYPE_ERROR);
+            msg.setResult(RESULT_FAIL);
+            msg.setError(ERROR_REGISTER_VERIFICATION_CODE_IS_WRONG);
+        }
+
+        return msg;
+    }
+
+    //注册信息
+    private static Message VerificationCode_email(MsgInfo mi) {
+        Message msg = new Message();
+        String account = mi.getAccount();
+
+        //判断账号密码是否为正确的类型-邮件地址
+
+        //判断账号是否存在
+        if (!isAccountExist(account)) {
+            //生成验证码
+            String vc = getVerificationCode();
+
+            //判断容器内是否含有此验证码
+            if (VCService.isVCExist(account)) {
+                //如果有就直接发送
+                EmailService es = new EmailService(account, VCService.getVC(account));
+                es.sendEmail();
+            } else {
+                //如果没有直接用生成的验证码 发送验证码邮件
+                EmailService es = new EmailService(account, vc);
+                es.sendEmail();
+
+                //将验证码和账号加入验证容器中
+                VCService.add(mi.getAccount(), vc);
+            }
+
+            System.out.println("Email验证码:" + vc);
+            //发送成功
+            msg.setType(TYPE_REGISTER);
+            msg.setResult(RESULT_SUCCESS);
+            msg.setError(ERROR_NONE);
+
+        } else {
+            //发送失败
             msg.setType(TYPE_REGISTER);
             msg.setResult(RESULT_FAIL);
             msg.setError(ERROR_REGISTER_ACCOUNT_ALREADY_USE);
@@ -73,6 +207,8 @@ public class RegisterService implements IType, IError {
         return msg;
     }
 
+    ////////////////////////////////////////////////////////////
+    //功能库
     //查看数据库是否存在account
     private static boolean isAccountExist(String account) {
         String sql = "select * from client where account = ?";
@@ -104,9 +240,10 @@ public class RegisterService implements IType, IError {
     //生成四位的验证码
     private static String getVerificationCode() {
         String list = "AaBbCc123DdEeFfGgHhJjKk4MmNn567OoPpQqEeSsTt89UuVvWwXxYyZz0";
+        list = "0123456789";
         String vc = "";
         Random random = new Random();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             vc += list.charAt(random.nextInt(list.length() - 1));
         }
         random.nextInt(list.length());

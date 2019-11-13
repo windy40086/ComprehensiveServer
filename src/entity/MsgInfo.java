@@ -8,8 +8,17 @@ public class MsgInfo {
     private String msg;
     private String receive;
     private String error;
+    private String vc;
 
     private String time;
+
+    public String getVc() {
+        return vc;
+    }
+
+    public void setVc(String vc) {
+        this.vc = vc;
+    }
 
     public MsgInfo() {
     }
@@ -99,6 +108,10 @@ public class MsgInfo {
 
     public boolean isTimeExist() {
         return time != null;
+    }
+
+    public boolean isVCExist() {
+        return vc != null;
     }
 
 }

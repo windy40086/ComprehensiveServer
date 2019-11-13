@@ -18,7 +18,7 @@ public class Server {
         if (Server == null) {
             try {
                 Server = new ServerSocket(Integer.parseInt(port));
-                System.out.println("服务器打开在：" + Server.getLocalSocketAddress());
+                System.out.println("主服务器打开在：" + Server.getLocalSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }

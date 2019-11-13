@@ -45,6 +45,9 @@ public interface IType {
     //错误
     String ERR = "error";
 
+    //验证码类型
+    String VC = "verificationCode";
+
     //返回类型
     String RESULT = "result";
     /*

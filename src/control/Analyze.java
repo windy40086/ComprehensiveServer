@@ -38,7 +38,6 @@ class Analyze implements IType, IError {
         } else {
             return null;
         }
-
     }
 
 
@@ -70,6 +69,9 @@ class Analyze implements IType, IError {
                         break;
                     case ERR:
                         mi.setError(value);
+                        break;
+                    case VC:
+                        mi.setVc(value);
                     default:
                         break;
                 }
@@ -88,22 +90,27 @@ class Analyze implements IType, IError {
         //判断消息类型
         switch (mi.getType()) {
             case TYPE_RELAY:
+                System.out.println("转发消息");
                 message = toRelayMsg(u, mi);
                 break;
             //登陆消息
             case TYPE_LOGIN:
+                System.out.println("登录消息");
                 message = LoginService.toLoginMsg(u, mi);
                 break;
             //注册消息
             case TYPE_REGISTER:
+                System.out.println("注册消息");
                 message = RegisterService.toRegisterMsg(u, mi);
                 break;
             //系统消息
             case TYPE_SYSTEM:
+                System.out.println("系统消息");
                 message = toSystemMsg(u, mi);
                 break;
             //错误信息
             case TYPE_ERROR:
+                System.out.println("错误消息");
                 message = toErrorMsg(u, mi);
                 break;
             default:
@@ -129,9 +136,10 @@ class Analyze implements IType, IError {
         switch (mi.getType()) {
             //登录信息
             case TYPE_LOGIN:
-            //用户注册信息
-            case TYPE_REGISTER:
+                //用户注册信息
                 return mi.isAccountExist() && mi.isPasswordExist();
+            case TYPE_REGISTER:
+                return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist() && mi.isPasswordExist());
             //用户转发信息
             case TYPE_RELAY:
                 return mi.isAccountExist() && mi.isReceiveExist()
