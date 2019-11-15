@@ -10,6 +10,7 @@ import util.CloseUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 //频道类
 public class Channel implements Runnable, IType {
@@ -40,7 +41,7 @@ public class Channel implements Runnable, IType {
 //            other.send(m);
 //        }
         //根据Socket来判断用户
-        for (Channel other : Server.channels) {
+        for (Channel other : Server.getChannels()) {
             if (other == this) {
                 continue;
             }
@@ -67,7 +68,7 @@ public class Channel implements Runnable, IType {
 
     //系统消息
     private void system_msg(Message m) {
-        for (Channel ch : Server.channels) {
+        for (Channel ch : Server.getChannels()) {
             ch.send(m);
         }
     }
@@ -90,7 +91,7 @@ public class Channel implements Runnable, IType {
     //客户端断开连接
     private void disconnection() {
         System.out.println(this + "已经断开");
-        Server.channels.remove(this);
+        Server.getChannels().remove(this);
     }
 
     //发送数据
@@ -111,6 +112,7 @@ public class Channel implements Runnable, IType {
         }
     }
 
+    //获取这个Channel的用户名
     public String getUserAccount(){
         return user.getAccount();
     }
@@ -134,7 +136,7 @@ public class Channel implements Runnable, IType {
                 }
 
                 //在频道中找到接受人的id并发送
-                for (Channel ch : Server.channels) {
+                for (Channel ch : Server.getChannels()) {
                     if (null != ch.user.getAccount() && ch.user.getAccount().equals(msg.getReceiver())) {
                         ch.send(msg);
                     }
@@ -155,14 +157,21 @@ public class Channel implements Runnable, IType {
         }
     }
 
+    public Socket getClient(){
+        return this.user.getClient();
+    }
+
     @Override
     public void run() {
+        StreamService io = new StreamService();
         while (isRunning) {
             System.out.println();
             String s = receive();
             if (s == null) {
-                return;
+                disconnection();
+                break;
             }
+
             System.out.println(getUserInfo());
             System.out.println("接收到" + this + "的消息：" + s);
 

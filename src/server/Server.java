@@ -7,9 +7,14 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 public class Server {
+    
     private static ServerSocket Server = null;
 
-    public static ArrayList<Channel> channels = new ArrayList<>();
+    private static ArrayList<Channel> channels = new ArrayList<>();
+
+    public static ArrayList<Channel> getChannels() {
+        return channels;
+    }
 
     private Server() {
     }
@@ -25,4 +30,5 @@ public class Server {
         }
         return Server;
     }
+
 }

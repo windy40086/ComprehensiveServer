@@ -91,7 +91,7 @@ class Analyze implements IType, IError {
         switch (mi.getType()) {
             case TYPE_RELAY:
                 System.out.println("转发消息");
-                message = toRelayMsg(u, mi);
+                message = toRelayMsg(mi);
                 break;
             //登陆消息
             case TYPE_LOGIN:
@@ -101,7 +101,7 @@ class Analyze implements IType, IError {
             //注册消息
             case TYPE_REGISTER:
                 System.out.println("注册消息");
-                message = RegisterService.toRegisterMsg(u, mi);
+                message = RegisterService.toRegisterMsg(mi);
                 break;
             //系统消息
             case TYPE_SYSTEM:
@@ -111,7 +111,7 @@ class Analyze implements IType, IError {
             //错误信息
             case TYPE_ERROR:
                 System.out.println("错误消息");
-                message = toErrorMsg(u, mi);
+                message = toErrorMsg(mi);
                 break;
             default:
                 break;
@@ -120,7 +120,7 @@ class Analyze implements IType, IError {
     }
 
     //转为错误信息
-    private static Message toErrorMsg(User u, MsgInfo mi) {
+    private static Message toErrorMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
         msg.setError(ERROR_MSG_CANT_ANALYZE);
@@ -151,7 +151,7 @@ class Analyze implements IType, IError {
 
     //将分析的信息进行转换
     //转为用户信息
-    private static Message toRelayMsg(User u, MsgInfo mi) {
+    private static Message toRelayMsg(MsgInfo mi) {
         //这里需要通过User来过度
 
         Message msg = new Message();

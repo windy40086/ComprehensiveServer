@@ -18,7 +18,7 @@ public class LoginService implements IType, IError {
 
     //判断账号是否已经登录
     private static boolean isUserLogin(String account) {
-        for (Channel channel : Server.channels) {
+        for (Channel channel : Server.getChannels()) {
             if (null != channel.getUserAccount() && channel.getUserAccount().equals(account)) {
                 return true;
             }

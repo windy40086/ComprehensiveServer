@@ -1,5 +1,6 @@
 package service;
 
+import control.Channel;
 import entity.Message;
 import server.Server;
 import util.CloseUtil;

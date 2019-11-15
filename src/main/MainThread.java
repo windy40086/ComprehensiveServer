@@ -4,6 +4,7 @@ import control.Channel;
 import entity.User;
 import server.SMSServer;
 import server.Server;
+import service.VCService;
 import util.XMLUtil;
 
 import java.net.Socket;
@@ -26,6 +27,20 @@ public class MainThread {
                 startSMSServer();
             }
         }).start();
+        //验证码清洗服务
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean isRunning = true;
+//                while (isRunning) {
+//                    try {
+//                        isRunning = VCService.update_vc();
+//                        Thread.sleep(5000);
+//                    } catch (Exception ignored) {
+//                    }
+//                }
+//            }
+//        }).start();
     }
 
     //开启主服务
@@ -40,7 +55,7 @@ public class MainThread {
                 //User u = new User("windy@qq.com", "123456", socket);
                 User u = new User(socket);
                 Channel channel = new Channel(u);
-                Server.channels.add(channel);
+                Server.getChannels().add(channel);
 
                 System.out.println(channel + "已经连接");
 
@@ -53,7 +68,7 @@ public class MainThread {
 
     //开启短信验证服务
 
-    private static void startSMSServer(){
+    private static void startSMSServer() {
         SMSServer.start();
     }
 }

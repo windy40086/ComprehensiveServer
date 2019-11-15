@@ -15,7 +15,7 @@ import java.util.Random;
 public class RegisterService implements IType, IError {
 
     //转为注册信息
-    public static Message toRegisterMsg(User u, MsgInfo mi) {
+    public static Message toRegisterMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
 
@@ -24,10 +24,10 @@ public class RegisterService implements IType, IError {
         //如果包含 @
         if (account.contains("@")) {
             //邮箱注册
-            msg = mailboxVerification(u, mi);
+            msg = mailboxVerification(mi);
         }else {
             //手机号注册
-            msg = phoneVerification(u, mi);
+            msg = phoneVerification(mi);
         }
 
         return msg;
@@ -35,11 +35,11 @@ public class RegisterService implements IType, IError {
 
     ////////////////////////////////////////////////
     //手机号注册
-    private static Message phoneVerification(User u, MsgInfo mi) {
+    private static Message phoneVerification(MsgInfo mi) {
         //判断是注册信息还是验证信息
         if (mi.isVCExist()) {
             //如果有验证码，则验证并注册
-            return sign_up_by_phone(u, mi);
+            return sign_up_by_phone(mi);
         } else {
             //没有注册码，则发送注册码
             return VerificationCode_phone(mi);
@@ -47,7 +47,7 @@ public class RegisterService implements IType, IError {
     }
 
     //验证
-    private static Message sign_up_by_phone(User u, MsgInfo mi) {
+    private static Message sign_up_by_phone(MsgInfo mi) {
         Message msg = new Message();
         User temp = new User(mi.getAccount(), mi.getPassword());
         String VC = mi.getVc();
@@ -120,12 +120,12 @@ public class RegisterService implements IType, IError {
 
     /////////////////////////////////////////////////
     //邮箱验证
-    private static Message mailboxVerification(User u, MsgInfo mi) {
+    private static Message mailboxVerification(MsgInfo mi) {
 
         //判断是注册信息还是验证信息
         if (mi.isVCExist()) {
             //如果有验证码，则验证并注册
-            return sign_up_by_email(u, mi);
+            return sign_up_by_email(mi);
         } else {
             //没有注册码，则发送注册码
             return VerificationCode_email(mi);
@@ -133,7 +133,7 @@ public class RegisterService implements IType, IError {
     }
 
     //验证
-    private static Message sign_up_by_email(User u, MsgInfo mi) {
+    private static Message sign_up_by_email(MsgInfo mi) {
         Message msg = new Message();
         User temp = new User(mi.getAccount(), mi.getPassword());
         String VC = mi.getVc();
