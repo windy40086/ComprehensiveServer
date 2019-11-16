@@ -1,10 +1,12 @@
 package control;
 
+import db.UpdateDao;
 import entity.Message;
 import entity.MsgInfo;
 import entity.User;
 import inter.IError;
 import inter.IType;
+import service.HistoryService;
 import service.LoginService;
 import service.RegisterService;
 
@@ -151,14 +153,18 @@ class Analyze implements IType, IError {
 
     //将分析的信息进行转换
     //转为用户信息
-    private static Message toRelayMsg(MsgInfo mi) {
+    public static Message toRelayMsg(MsgInfo mi) {
         //这里需要通过User来过度
-
         Message msg = new Message();
         msg.setType(mi.getType());
         msg.setAccount(mi.getAccount());
         msg.setReceiver(mi.getReceive());
         msg.setMsg(mi.getMsg());
+
+        //通过Account | Receiver记录历史记录
+        HistoryService.insertHM(msg.getAccount(), msg.getReceiver(), msg.getMsg(), msg.getType());
+        HistoryService.insertHM(msg.getReceiver(), msg.getAccount(), msg.getMsg(), msg.getType());
+
         return msg;
     }
 

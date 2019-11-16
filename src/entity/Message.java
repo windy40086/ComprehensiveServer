@@ -8,15 +8,30 @@ public class Message implements IType, IError {
 
     private String account = null;
     private String password = null;
+    private String email = null;
+    private String phone = null;
     private String receiver = null;
     private String msg = null;
     private String result = null;
     private String error = null;
+    private String cursor = null;
 
     private String createTime = null;
 
     public Message() {
 
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
     }
 
     public String getType() {
@@ -25,6 +40,22 @@ public class Message implements IType, IError {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAccount() {
@@ -118,6 +149,6 @@ public class Message implements IType, IError {
     }
 
     private String toRelay() {
-        return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg;
+        return TYPE + "=" + type + "&" + ACCOUNT + "=" + account + "&" + MSG + "=" + msg + "&" + CURSOR + "=" + cursor;
     }
 }

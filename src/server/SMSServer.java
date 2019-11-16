@@ -14,6 +14,10 @@ public class SMSServer {
 
     private static String port = "10442";
 
+    public static boolean isSMSClientCon(){
+        return SMSClient != null;
+    }
+
     private SMSServer() {
     }
 
@@ -37,6 +41,7 @@ public class SMSServer {
                 dos = new DataOutputStream(SMSClient.getOutputStream());
             }
         } catch (IOException e) {
+            SMSClient = null;
             e.printStackTrace();
         }
     }
@@ -51,6 +56,7 @@ public class SMSServer {
             dos.writeUTF(msg);
             return true;
         } catch (IOException e) {
+            SMSClient = null;
             e.printStackTrace();
         }
         return false;

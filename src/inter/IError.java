@@ -6,6 +6,7 @@ public interface IError {
     int ERROR_REGISTER_ACCOUNT_ALREADY_USE = 10001;
     int ERROR_REGISTER_FAIL = 10002;
     int ERROR_REGISTER_VERIFICATION_CODE_IS_WRONG = 10003;
+    int ERROR_REGISTER_SMSClient_IS_CLOSE = 10004;
 
     //login error
     int ERROR_LOGIN = 11000;

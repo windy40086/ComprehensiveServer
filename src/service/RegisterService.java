@@ -1,12 +1,14 @@
 package service;
 
 import db.DBUtil;
+import db.UpdateDao;
 import entity.Message;
 import entity.MsgInfo;
 import entity.User;
 import inter.IError;
 import inter.IType;
 import server.SMSServer;
+import sun.nio.cs.ext.MS874;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +20,6 @@ public class RegisterService implements IType, IError {
     public static Message toRegisterMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
-
         String account = mi.getAccount();
 
         //如果包含 @
@@ -37,12 +38,20 @@ public class RegisterService implements IType, IError {
     //手机号注册
     private static Message phoneVerification(MsgInfo mi) {
         //判断是注册信息还是验证信息
-        if (mi.isVCExist()) {
-            //如果有验证码，则验证并注册
-            return sign_up_by_phone(mi);
-        } else {
-            //没有注册码，则发送注册码
-            return VerificationCode_phone(mi);
+        if (SMSServer.isSMSClientCon()){
+            if (mi.isVCExist()) {
+                //如果有验证码，则验证并注册
+                return sign_up_by_phone(mi);
+            } else {
+                //没有注册码，则发送注册码
+                return VerificationCode_phone(mi);
+            }
+        }else{
+            Message m = new Message();
+            m.setType(ERR);
+            m.setResult(RESULT_FAIL);
+            m.setError(ERROR_REGISTER_SMSClient_IS_CLOSE);
+            return m;
         }
     }
 
@@ -58,7 +67,7 @@ public class RegisterService implements IType, IError {
         if (isVCCorrect) {
             //创建账号
             msg.setType(TYPE_REGISTER);
-            boolean isCreateSuccess = createAccount(temp);
+            boolean isCreateSuccess = UpdateDao.createAccount(temp);
             if (isCreateSuccess) {
                 //创建成功则删除验证码
                 VCService.delete(temp.getAccount());
@@ -87,7 +96,7 @@ public class RegisterService implements IType, IError {
         //判断账号密码是否为正确的类型-电话号码
 
         //判断账号是否存在
-        if (!isAccountExist(account)) {
+        if (isAccountExist(account)) {
             //生成验证码
             String vc = getVerificationCode();
 
@@ -144,7 +153,7 @@ public class RegisterService implements IType, IError {
         if (isVCCorrect) {
             //创建账号
             msg.setType(TYPE_REGISTER);
-            boolean isCreateSuccess = createAccount(temp);
+            boolean isCreateSuccess = UpdateDao.createAccount(temp);
             if (isCreateSuccess) {
                 //创建成功则删除验证码
                 VCService.delete(temp.getAccount());
@@ -174,7 +183,7 @@ public class RegisterService implements IType, IError {
         //判断账号密码是否为正确的类型-邮件地址
 
         //判断账号是否存在
-        if (!isAccountExist(account)) {
+        if (isAccountExist(account)) {
             //生成验证码
             String vc = getVerificationCode();
 
@@ -215,38 +224,26 @@ public class RegisterService implements IType, IError {
         Object[] params = {account};
         ResultSet rs = DBUtil.executeQuery(sql, params);
         try {
+            assert rs != null;
             if (rs.next()) {
-                return true;
+                return false;
             }
         } catch (SQLException e) {
-            return true;
+            return false;
         }
-        return false;
-    }
-
-    //在数据库中建立用户
-    private static boolean createAccount(User u) {
-        String sql = "insert into client(account,password,jurisdiction) values(?,?,?)";
-        Object[] params = {u.getAccount(), u.getPassword(), 0};
-        boolean isSuccess;
-        isSuccess = DBUtil.executeUpdate(sql, params);
-        if (!isSuccess) return false;
-        sql = "insert into user_profile(account,email) values(?,?)";
-        params = new Object[]{u.getAccount(), u.getAccount()};
-        isSuccess = DBUtil.executeUpdate(sql, params);
-        return isSuccess;
+        return true;
     }
 
     //生成四位的验证码
     private static String getVerificationCode() {
         String list = "AaBbCc123DdEeFfGgHhJjKk4MmNn567OoPpQqEeSsTt89UuVvWwXxYyZz0";
         list = "0123456789";
-        String vc = "";
+        StringBuilder vc = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
-            vc += list.charAt(random.nextInt(list.length() - 1));
+            vc.append(list.charAt(random.nextInt(list.length() - 1)));
         }
         random.nextInt(list.length());
-        return vc;
+        return vc.toString();
     }
 }

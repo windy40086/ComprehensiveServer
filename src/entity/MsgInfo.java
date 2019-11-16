@@ -9,6 +9,7 @@ public class MsgInfo {
     private String receive;
     private String error;
     private String vc;
+    private String cursor;
 
     private String time;
 
@@ -18,6 +19,15 @@ public class MsgInfo {
 
     public void setVc(String vc) {
         this.vc = vc;
+    }
+
+
+    public String getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
     }
 
     public MsgInfo() {

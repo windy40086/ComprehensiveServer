@@ -50,6 +50,9 @@ public interface IType {
 
     //返回类型
     String RESULT = "result";
+
+    //消息标志
+    String CURSOR = "cursor";
     /*
     例：
     public String toLogin(){
@@ -60,4 +63,10 @@ public interface IType {
     //注册登录返回result
     String RESULT_SUCCESS = "1";
     String RESULT_FAIL = "2";
+
+
+    ///////////////////////////////////////
+    //注册登录用
+    int PHONE = 0;
+    int EMAIL = 1;
 }

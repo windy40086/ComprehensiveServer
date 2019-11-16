@@ -4,6 +4,7 @@ import java.net.Socket;
 
 //用户实体类
 public class User {
+    private String id;
     private String account;
     private String password;
     private Socket client;
@@ -21,6 +22,14 @@ public class User {
 
     public User(Socket client) {
         this.client = client;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Socket getClient() {
@@ -44,6 +53,6 @@ public class User {
     }
 
     public String toString() {
-        return "account:" + account + " password:" + password;
+        return "id:" + id + "account:" + account + " password:" + password;
     }
 }
