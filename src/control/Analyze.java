@@ -1,6 +1,5 @@
 package control;
 
-import db.UpdateDao;
 import entity.Message;
 import entity.MsgInfo;
 import entity.User;
@@ -9,7 +8,9 @@ import inter.IType;
 import service.HistoryService;
 import service.LoginService;
 import service.RegisterService;
+import service.StreamService;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 class Analyze implements IType, IError {
@@ -74,6 +75,10 @@ class Analyze implements IType, IError {
                         break;
                     case VC:
                         mi.setVc(value);
+                        break;
+                    case CURSOR:
+                        mi.setCursor(value);
+                        break;
                     default:
                         break;
                 }
@@ -108,12 +113,17 @@ class Analyze implements IType, IError {
             //系统消息
             case TYPE_SYSTEM:
                 System.out.println("系统消息");
-                message = toSystemMsg(u, mi);
+                message = toSystemMsg(mi);
                 break;
             //错误信息
             case TYPE_ERROR:
                 System.out.println("错误消息");
                 message = toErrorMsg(mi);
+                break;
+            //历史消息
+            case TYPE_HISTORT:
+                System.out.println("历史消息获取");
+//                message = toHistory(mi);
                 break;
             default:
                 break;
@@ -141,11 +151,13 @@ class Analyze implements IType, IError {
                 //用户注册信息
                 return mi.isAccountExist() && mi.isPasswordExist();
             case TYPE_REGISTER:
-                return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist() && mi.isPasswordExist());
+                return (mi.isAccountExist()) || (mi.isVCExist() && mi.isPasswordExist());
             //用户转发信息
             case TYPE_RELAY:
                 return mi.isAccountExist() && mi.isReceiveExist()
                         && mi.isMsgExist();
+            case TYPE_HISTORT:
+                return mi.isAccountExist() && mi.isReceiveExist() && mi.isCursorExist();
             default:
                 return false;
         }
@@ -153,7 +165,7 @@ class Analyze implements IType, IError {
 
     //将分析的信息进行转换
     //转为用户信息
-    public static Message toRelayMsg(MsgInfo mi) {
+    private static Message toRelayMsg(MsgInfo mi) {
         //这里需要通过User来过度
         Message msg = new Message();
         msg.setType(mi.getType());
@@ -163,15 +175,24 @@ class Analyze implements IType, IError {
 
         //通过Account | Receiver记录历史记录
         HistoryService.insertHM(msg.getAccount(), msg.getReceiver(), msg.getMsg(), msg.getType());
-        HistoryService.insertHM(msg.getReceiver(), msg.getAccount(), msg.getMsg(), msg.getType());
+
+        //返回当前的Cursor
+        String Cursor = HistoryService.getCursor(msg.getAccount());
+        msg.setCursor(Cursor);
 
         return msg;
     }
 
     //转为系统信息
-    private static Message toSystemMsg(User u, MsgInfo mi) {
+    private static Message toSystemMsg(MsgInfo mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
         return msg;
+    }
+
+    //发送历史消息
+    private static ArrayList<String> toHistory(MsgInfo mi){
+        ArrayList<String> messages = HistoryService.getMessages(mi.getAccount(),Integer.parseInt(mi.getCursor()));
+        return null;
     }
 }

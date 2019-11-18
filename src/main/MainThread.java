@@ -28,24 +28,29 @@ public class MainThread {
             }
         }).start();
         //验证码清洗服务
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                boolean isRunning = true;
-//                while (isRunning) {
-//                    try {
-//                        isRunning = VCService.update_vc();
-//                        Thread.sleep(5000);
-//                    } catch (Exception ignored) {
-//                    }
-//                }
-//            }
-//        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isRunning = true;
+                int sleep = 10;
+                System.out.println("短信清洗开启");
+                while (true) {
+                    try {
+                        if (!VCService.isVCEmpty()) {
+                            VCService.update_vc(sleep);
+                            Thread.sleep(sleep * 1000);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     //开启主服务
     private static void startServer() {
-        String port = (String) XMLUtil.getBean("serverport");
+//        String port = (String) XMLUtil.getBean("serverport");
         //开始接受客户端
         while (true) {
             try {

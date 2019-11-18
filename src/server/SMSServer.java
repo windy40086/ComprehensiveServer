@@ -36,9 +36,11 @@ public class SMSServer {
     private static void getCon() {
         try {
             while(true){
-                SMSClient = Server.accept();
-                System.out.println("短信发送机已经登录");
-                dos = new DataOutputStream(SMSClient.getOutputStream());
+                if(SMSClient == null){
+                    SMSClient = Server.accept();
+                    System.out.println("短信发送机已经登录");
+                    dos = new DataOutputStream(SMSClient.getOutputStream());
+                }
             }
         } catch (IOException e) {
             SMSClient = null;

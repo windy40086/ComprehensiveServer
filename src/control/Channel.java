@@ -2,6 +2,8 @@ package control;
 
 import entity.Message;
 import entity.User;
+import entity.task.LoginTask;
+import entity.task.ITask;
 import inter.IType;
 import server.Server;
 import service.StreamService;
@@ -163,7 +165,6 @@ public class Channel implements Runnable, IType {
 
     @Override
     public void run() {
-        StreamService io = new StreamService();
         while (isRunning) {
             System.out.println();
             String s = receive();
@@ -177,6 +178,7 @@ public class Channel implements Runnable, IType {
 
             //处理消息
             Message msg = Analyze.analyzeMessage(this.user, s);
+
             if (null == msg) {
                 isRunning = false;
                 disconnection();

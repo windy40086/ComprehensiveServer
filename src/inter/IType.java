@@ -26,6 +26,9 @@ public interface IType {
     //send: requestType=4&error=xxx
     String TYPE_ERROR = "4";
 
+    //Cursor 历史记录
+    String TYPE_HISTORT = "5";
+
     //消息对应的解析词
     //消息类型
     String TYPE = "requestType";
@@ -53,6 +56,8 @@ public interface IType {
 
     //消息标志
     String CURSOR = "cursor";
+
+
     /*
     例：
     public String toLogin(){

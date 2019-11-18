@@ -124,4 +124,8 @@ public class MsgInfo {
         return vc != null;
     }
 
+    public boolean isCursorExist() {
+        return cursor != null;
+    }
+
 }

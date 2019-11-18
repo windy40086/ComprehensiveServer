@@ -46,8 +46,17 @@ public class UpdateDao implements IType {
         return DBUtil.executeUpdate(sql, params);
     }
 
-    //插入用户的聊天记录
     public static boolean insertHM(String account, String receiver, String message, String type) {
+        try {
+            insertMsg(account, receiver, message, type);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    //插入用户的聊天记录
+    private static boolean insertMsg(String account, String receiver, String message, String type) {
         boolean isSuccess = false;
         String sql;
         Object[] params;
@@ -57,8 +66,19 @@ public class UpdateDao implements IType {
             case PHONE:
             case EMAIL:
                 accountID = QueryDao.getUserID(account);
-                receiverID = QueryDao.getUserID(receiver);
-                sql = "insert into msg_" + QueryDao.getUserID(account) + "(account,receiver,msg,type_id) values(?,?,?,?)";
+                int temp = QueryDao.getUserID(receiver);
+                if (temp > 1000000000)
+                    receiverID = QueryDao.getUserID(receiver);
+                else
+                    receiverID = 1;
+
+                //插入至account
+                sql = "insert into msg_" + accountID + "(account,receiver,msg,type_id) values(?,?,?,?)";
+                params = new Object[]{accountID, receiverID, message, type};
+                DBUtil.executeUpdate(sql, params);
+
+                //插入至receiver
+                sql = "insert into msg_" + receiverID + "(account,receiver,msg,type_id) values(?,?,?,?)";
                 params = new Object[]{accountID, receiverID, message, type};
                 isSuccess = DBUtil.executeUpdate(sql, params);
                 break;

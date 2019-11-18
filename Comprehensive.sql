@@ -23,10 +23,13 @@ create table client(
 );
 
 -- 用户初始化
-insert into client(account,password,jurisdiction) values("admin","admin",9);
-insert into client(account,password,jurisdiction) values("windy","123",0);
-insert into client(account,password,jurisdiction) values("cx","456",0);
+insert into client(account,password,email,jurisdiction) values("admin","admin","admin",9);
+insert into client(account,password,email,jurisdiction) values("windy","123","windy",0);
+insert into client(account,password,email,jurisdiction) values("cx","456","cx",0);
+
 alter table client AUTO_INCREMENT=1000000000;
+insert into client(email,password,jurisdiction) values("379949419@qq.com","123456",0);
+insert into client(tel,password,jurisdiction) values("15171544044","123456",0);
 
 -- 消息类型表
 create table msg_type(
@@ -48,11 +51,10 @@ insert into msg_type(type_id,type_name) values(6,"none");
 insert into msg_type(type_id,type_name) values(7,"none");
 
 
-
-
--- 消息内容表
-create table msg_3(
+-- 系统群
+create table msg_1(
     pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
     receiver varchar(50),
     msg varchar(1000) default '',
     type_id int not null,
@@ -61,8 +63,10 @@ create table msg_3(
     update_time TIMESTAMP default CURRENT_TIMESTAMP
 );
 
-create table msg_1(
+-- 消息内容表
+create table msg_3(
     pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
     receiver varchar(50),
     msg varchar(1000) default '',
     type_id int not null,
@@ -73,6 +77,29 @@ create table msg_1(
 
 create table msg_2(
     pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
+    receiver varchar(50),
+    msg varchar(1000) default '',
+    type_id int not null,
+    send_time TIMESTAMP default CURRENT_TIMESTAMP,
+    create_time TIMESTAMP default CURRENT_TIMESTAMP ,
+    update_time TIMESTAMP default CURRENT_TIMESTAMP
+);
+
+create table msg_1000000000(
+    pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
+    receiver varchar(50),
+    msg varchar(1000) default '',
+    type_id int not null,
+    send_time TIMESTAMP default CURRENT_TIMESTAMP,
+    create_time TIMESTAMP default CURRENT_TIMESTAMP ,
+    update_time TIMESTAMP default CURRENT_TIMESTAMP
+);
+
+create table msg_1000000001(
+    pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
     receiver varchar(50),
     msg varchar(1000) default '',
     type_id int not null,
