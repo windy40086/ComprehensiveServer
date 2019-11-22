@@ -58,7 +58,7 @@ public class EmailService {
         return message;
     }
 
-    public void sendEmail() {
+    public boolean sendEmail() {
         // 1. 创建参数配置, 用于连接邮件服务器的参数配置
         Properties props = new Properties();                    // 参数配置
         props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
@@ -120,10 +120,11 @@ public class EmailService {
 
             // 7. 关闭连接
             transport.close();
-
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 }
 

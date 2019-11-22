@@ -3,9 +3,7 @@ package main;
 import control.Channel;
 import entity.User;
 import server.SMSServer;
-import server.Server;
-import service.VCService;
-import util.XMLUtil;
+import server.ServerAndroid;
 
 import java.net.Socket;
 
@@ -28,24 +26,24 @@ public class MainThread {
             }
         }).start();
         //验证码清洗服务
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean isRunning = true;
-                int sleep = 10;
-                System.out.println("短信清洗开启");
-                while (true) {
-                    try {
-                        if (!VCService.isVCEmpty()) {
-                            VCService.update_vc(sleep);
-                            Thread.sleep(sleep * 1000);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean isRunning = true;
+//                int sleep = 10;
+//                System.out.println("短信清洗开启");
+//                while (true) {
+//                    try {
+//                        if (!VCService.isVCEmpty()) {
+//                            VCService.update_vc(sleep);
+//                            Thread.sleep(sleep * 1000);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }).start();
     }
 
     //开启主服务
@@ -56,11 +54,11 @@ public class MainThread {
             try {
                 Thread.sleep(1000);
                 //如服务器异常关闭，会在这里重启
-                Socket socket = Server.getServer("10443").accept();
+                Socket socket = ServerAndroid.getServer("10443").accept();
                 //User u = new User("windy@qq.com", "123456", socket);
                 User u = new User(socket);
                 Channel channel = new Channel(u);
-                Server.getChannels().add(channel);
+                ServerAndroid.getChannels().add(channel);
 
                 System.out.println(channel + "已经连接");
 

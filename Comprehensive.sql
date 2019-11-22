@@ -11,6 +11,7 @@ create table client(
 	email varchar(50) default '',
     tel varchar(50) default '',
     password varchar(50) not null,
+	hashcode varchar(20) not null,
     
     jurisdiction int,
     profile_photo varchar(200) default '',
@@ -20,7 +21,7 @@ create table client(
     
     create_time TIMESTAMP default CURRENT_TIMESTAMP,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 -- 用户初始化
 insert into client(account,password,email,jurisdiction) values("admin","admin","admin",9);
@@ -30,6 +31,7 @@ insert into client(account,password,email,jurisdiction) values("cx","456","cx",0
 alter table client AUTO_INCREMENT=1000000000;
 insert into client(email,password,jurisdiction) values("379949419@qq.com","123456",0);
 insert into client(tel,password,jurisdiction) values("15171544044","123456",0);
+insert into client(email,password,jurisdiction) values("592467023@qq.com","caoxuan",0);
 
 -- 消息类型表
 create table msg_type(
@@ -38,7 +40,7 @@ create table msg_type(
     type_name varchar(50),
     create_time TIMESTAMP default CURRENT_TIMESTAMP,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 -- 消息内容初始化
 insert into msg_type(type_id,type_name) values(0,"the msg is send by system");
@@ -61,7 +63,7 @@ create table msg_1(
     send_time TIMESTAMP default CURRENT_TIMESTAMP,
     create_time TIMESTAMP default CURRENT_TIMESTAMP ,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 -- 消息内容表
 create table msg_3(
@@ -73,7 +75,7 @@ create table msg_3(
     send_time TIMESTAMP default CURRENT_TIMESTAMP,
     create_time TIMESTAMP default CURRENT_TIMESTAMP ,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 create table msg_2(
     pk_id bigint unsigned primary key auto_increment,
@@ -84,7 +86,7 @@ create table msg_2(
     send_time TIMESTAMP default CURRENT_TIMESTAMP,
     create_time TIMESTAMP default CURRENT_TIMESTAMP ,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 create table msg_1000000000(
     pk_id bigint unsigned primary key auto_increment,
@@ -95,7 +97,7 @@ create table msg_1000000000(
     send_time TIMESTAMP default CURRENT_TIMESTAMP,
     create_time TIMESTAMP default CURRENT_TIMESTAMP ,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
 
 create table msg_1000000001(
     pk_id bigint unsigned primary key auto_increment,
@@ -106,4 +108,15 @@ create table msg_1000000001(
     send_time TIMESTAMP default CURRENT_TIMESTAMP,
     create_time TIMESTAMP default CURRENT_TIMESTAMP ,
     update_time TIMESTAMP default CURRENT_TIMESTAMP
-);
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;
+
+create table msg_1000000002(
+    pk_id bigint unsigned primary key auto_increment,
+	account varchar(50),
+    receiver varchar(50),
+    msg varchar(1000) default '',
+    type_id int not null,
+    send_time TIMESTAMP default CURRENT_TIMESTAMP,
+    create_time TIMESTAMP default CURRENT_TIMESTAMP ,
+    update_time TIMESTAMP default CURRENT_TIMESTAMP
+)ENGINE=INNODB DEFAULT CHARSET=UTF8MB4;

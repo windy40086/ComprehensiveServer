@@ -13,24 +13,31 @@ public class DBUtil {
     private static final String DataBase = mc.getDataBase();
     private static final String U = mc.getU();
     private static final String P = mc.getP();
-    private static final String DRIVER = mc.getDriver();
+//    private static final String DRIVER = mc.getDriver();
 
-    private static Connection connect = null;
     private static PreparedStatement pstmt = null;
     private static ResultSet rs = null;
 
-    private static Connection getCon() {
-        try {
-            Class.forName(DRIVER);
-            return DriverManager.getConnection(URL + DataBase + "?serverTimezone=CTT", U, P);
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("mysql is close");
-        }
-        return connect;
+    private static class con {
+        private static Connection connect;
 
+        static Connection getCon() {
+            if (connect == null) {
+                try {
+                    connect = DriverManager.getConnection(URL + DataBase + "?serverTimezone=CTT", U, P);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return connect;
+        }
     }
 
-    private static PreparedStatement createPreSta(String sql, Object[] params) throws SQLException {
+    private static synchronized Connection getCon() {
+        return con.getCon();
+    }
+
+    private static synchronized PreparedStatement createPreSta(String sql, Object[] params) throws SQLException {
         pstmt = getCon().prepareStatement(sql);
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
@@ -40,11 +47,10 @@ public class DBUtil {
         return pstmt;
     }
 
-    private static void dbCloseAll() {
+    static synchronized void dbCloseAll() {
         try {
             if (pstmt != null) pstmt.close();
             if (rs != null) rs.close();
-            if (connect != null) connect.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +58,7 @@ public class DBUtil {
     }
 
     //增加 删除 修改
-    public static boolean executeUpdate(String sql, Object[] params) {
+    static synchronized boolean executeUpdate(String sql, Object[] params) {
         try {
             int count = createPreSta(sql, params).executeUpdate();
             return count > 0;
@@ -63,7 +69,7 @@ public class DBUtil {
     }
 
     //查询
-    public static ResultSet executeQuery(String sql, Object[] params) {
+    static synchronized ResultSet executeQuery(String sql, Object[] params) {
         try {
             return createPreSta(sql, params).executeQuery();
         } catch (Exception e) {
@@ -73,19 +79,19 @@ public class DBUtil {
         }
     }
 
-    public static int getTotalCount(String sql) {
-        int count = 0;
-        try {
-            pstmt = createPreSta(sql, null);
-            rs = pstmt.executeQuery();
+//    public static synchronized int getTotalCount(String sql) {
+//        int count = 0;
+//        try {
+//            pstmt = createPreSta(sql, null);
+//            rs = pstmt.executeQuery();
+//
+//            while (rs.next()) {
+//                count++;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return count;
+//    }
 
-            while (rs.next()) {
-                count++;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return count;
-
-    }
 }

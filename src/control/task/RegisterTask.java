@@ -1,23 +1,42 @@
-package service;
+package control.task;
 
 import db.DBUtil;
+import db.QueryDao;
 import db.UpdateDao;
 import entity.Message;
-import entity.MsgInfo;
 import entity.User;
-import inter.IError;
-import inter.IType;
+import inter.ITask;
 import server.SMSServer;
-import sun.nio.cs.ext.MS874;
+import service.EmailService;
+import service.StreamService;
+import service.VCService;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
-public class RegisterService implements IType, IError {
+public class RegisterTask implements ITask {
+    @Override
+    public boolean doTask(User u, Message message) {
+        System.out.println("RegisterTask");
+        Message result = register(message);
+        return sendMessage(u,result.toString());
+    }
+
+    //返回消息
+    private static boolean sendMessage(User u, String message){
+        try {
+            StreamService.sendMsg(u.getClient(),message);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     //转为注册信息
-    public static Message toRegisterMsg(MsgInfo mi) {
+    private static Message register(Message mi) {
         Message msg = new Message();
         msg.setType(mi.getType());
         String account = mi.getAccount();
@@ -36,7 +55,7 @@ public class RegisterService implements IType, IError {
 
     ////////////////////////////////////////////////
     //手机号注册
-    private static Message phoneVerification(MsgInfo mi) {
+    private static Message phoneVerification(Message mi) {
         //判断是注册信息还是验证信息
         if (SMSServer.isSMSClientCon()){
             if (mi.isVCExist()) {
@@ -48,7 +67,7 @@ public class RegisterService implements IType, IError {
             }
         }else{
             Message m = new Message();
-            m.setType(ERR);
+            m.setType(TYPE_ERROR);
             m.setResult(RESULT_FAIL);
             m.setError(ERROR_REGISTER_SMSClient_IS_CLOSE);
             return m;
@@ -56,15 +75,16 @@ public class RegisterService implements IType, IError {
     }
 
     //验证
-    private static Message sign_up_by_phone(MsgInfo mi) {
+    private static Message sign_up_by_phone(Message mi) {
         Message msg = new Message();
         User temp = new User(mi.getAccount(), mi.getPassword());
         String VC = mi.getVc();
         //验证账号
         boolean isVCCorrect = VCService.check(temp.getAccount(), VC);
+        boolean isAccountExist = QueryDao.isAccountExist(temp.getAccount(),PHONE);
 
         //如果账号正确
-        if (isVCCorrect) {
+        if ((!isAccountExist)&&isVCCorrect) {
             //创建账号
             msg.setType(TYPE_REGISTER);
             boolean isCreateSuccess = UpdateDao.createAccount(temp);
@@ -88,15 +108,17 @@ public class RegisterService implements IType, IError {
     }
 
     //注册信息
-    private static Message VerificationCode_phone(MsgInfo mi) {
+    private static Message VerificationCode_phone(Message mi) {
         Message msg = new Message();
         msg.setType(TYPE_REGISTER);
         String account = mi.getAccount();
 
         //判断账号密码是否为正确的类型-电话号码
 
-        //判断账号是否存在
-        if (isAccountExist(account)) {
+        //判断账号是否不存在
+        boolean isAccountExist = QueryDao.isAccountExist(account,PHONE);
+
+        if (!isAccountExist) {
             //生成验证码
             String vc = getVerificationCode();
 
@@ -129,7 +151,7 @@ public class RegisterService implements IType, IError {
 
     /////////////////////////////////////////////////
     //邮箱验证
-    private static Message mailboxVerification(MsgInfo mi) {
+    private static Message mailboxVerification(Message mi) {
 
         //判断是注册信息还是验证信息
         if (mi.isVCExist()) {
@@ -142,15 +164,16 @@ public class RegisterService implements IType, IError {
     }
 
     //验证
-    private static Message sign_up_by_email(MsgInfo mi) {
+    private static Message sign_up_by_email(Message mi) {
         Message msg = new Message();
         User temp = new User(mi.getAccount(), mi.getPassword());
         String VC = mi.getVc();
         //验证账号
         boolean isVCCorrect = VCService.check(temp.getAccount(), VC);
+        boolean isAccountExist = QueryDao.isAccountExist(mi.getAccount(),EMAIL);
 
         //如果账号正确
-        if (isVCCorrect) {
+        if ((!isAccountExist)&&isVCCorrect) {
             //创建账号
             msg.setType(TYPE_REGISTER);
             boolean isCreateSuccess = UpdateDao.createAccount(temp);
@@ -176,14 +199,15 @@ public class RegisterService implements IType, IError {
     }
 
     //注册信息
-    private static Message VerificationCode_email(MsgInfo mi) {
+    private static Message VerificationCode_email(Message mi) {
         Message msg = new Message();
         String account = mi.getAccount();
 
         //判断账号密码是否为正确的类型-邮件地址
 
         //判断账号是否存在
-        if (isAccountExist(account)) {
+        boolean isAccountExist = QueryDao.isAccountExist(account,EMAIL);
+        if (!isAccountExist) {
             //生成验证码
             String vc = getVerificationCode();
 
@@ -195,7 +219,14 @@ public class RegisterService implements IType, IError {
             } else {
                 //如果没有直接用生成的验证码 发送验证码邮件
                 EmailService es = new EmailService(account, vc);
-                es.sendEmail();
+
+                boolean isSuccess = es.sendEmail();
+                if(!isSuccess){
+                    msg.setType(TYPE_REGISTER);
+                    msg.setResult(RESULT_FAIL);
+                    msg.setError(ERROR_REGISTER_EMAIL_WRONG);
+                    return msg;
+                }
 
                 //将验证码和账号加入验证容器中
                 VCService.add(mi.getAccount(), vc);
@@ -218,26 +249,10 @@ public class RegisterService implements IType, IError {
 
     ////////////////////////////////////////////////////////////
     //功能库
-    //查看数据库是否存在account
-    private static boolean isAccountExist(String account) {
-        String sql = "select * from client where account = ?";
-        Object[] params = {account};
-        ResultSet rs = DBUtil.executeQuery(sql, params);
-        try {
-            assert rs != null;
-            if (rs.next()) {
-                return false;
-            }
-        } catch (SQLException e) {
-            return false;
-        }
-        return true;
-    }
-
     //生成四位的验证码
     private static String getVerificationCode() {
-        String list = "AaBbCc123DdEeFfGgHhJjKk4MmNn567OoPpQqEeSsTt89UuVvWwXxYyZz0";
-        list = "0123456789";
+//        String list = "AaBbCc123DdEeFfGgHhJjKk4MmNn567OoPpQqEeSsTt89UuVvWwXxYyZz0";
+        String list = "0123456789";
         StringBuilder vc = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {

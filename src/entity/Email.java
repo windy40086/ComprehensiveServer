@@ -10,6 +10,7 @@ public class Email {
     public Email() {
     }
 
+    @Deprecated
     public Email(String receiver, String account, String title, String content, boolean debug) {
         this.receiver = receiver;
         this.account = account;
@@ -18,9 +19,10 @@ public class Email {
         this.debug = debug;
     }
 
-    public boolean isDebug() {
-        return debug;
-    }
+
+//    public boolean isDebug() {
+//        return debug;
+//    }
 
     public void setDebug(boolean debug) {
         this.debug = debug;

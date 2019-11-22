@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="ComprehensiveServer:jar">
+  <artifact type="jar" name="ComprehensiveServer:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/ComprehensiveServer_jar</output-path>
     <root id="archive" name="ComprehensiveServer.jar">
       <element id="module-output" name="ComprehensiveServer" />

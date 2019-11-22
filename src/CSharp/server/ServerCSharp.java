@@ -1,4 +1,4 @@
-package server;
+package CSharp.server;
 
 import control.Channel;
 
@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-public class Server {
-    
+public class ServerCSharp {
+
     private static ServerSocket Server = null;
 
     private static ArrayList<Channel> channels = new ArrayList<>();
@@ -16,13 +16,13 @@ public class Server {
         return channels;
     }
 
-    private Server() {
+    private ServerCSharp() {
     }
 
-    public static ServerSocket getServer(String port) {
+    public static ServerSocket getServer(int port) {
         if (Server == null) {
             try {
-                Server = new ServerSocket(Integer.parseInt(port));
+                Server = new ServerSocket(port);
                 System.out.println("主服务器打开在：" + Server.getLocalSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();

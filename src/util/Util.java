@@ -1,6 +1,5 @@
 package util;
 
-import db.QueryDao;
 import inter.IType;
 
 public class Util implements IType {

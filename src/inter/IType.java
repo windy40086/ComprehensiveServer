@@ -26,38 +26,42 @@ public interface IType {
     //send: requestType=4&error=xxx
     String TYPE_ERROR = "4";
 
-    //Cursor 历史记录
+    //history 历史记录
     String TYPE_HISTORT = "5";
 
     //消息对应的解析词
     //消息类型
-    String TYPE = "requestType";
+    String STRING_TYPE = "request_type";
 
     //密码
-    String PASSWORD = "password";
+    String STRING_PASSWORD = "password";
+
+    //uid
+    String STRING_UID = "uid";
 
     //用户ID
-    String ACCOUNT = "account";
+    String STRING_ACCOUNT = "account";
 
     //接受用户
-    String RECEIVER = "receiver";
+    String STRING_RECEIVER = "receiver";
 
     //消息主体
-    String MSG = "message";
+    String STRING_MSG = "message";
 
     //错误
-    String ERR = "error";
+    String STRING_ERR = "error";
 
     //验证码类型
-    String VC = "verificationCode";
+    String STRING_VC = "verification_code";
 
     //返回类型
-    String RESULT = "result";
+    String STRING_RESULT = "result";
 
     //消息标志
-    String CURSOR = "cursor";
+    String STRING_CURSOR = "cursor";
 
-
+    //hash code
+    String STRING_HASHCODE = "hashcode";
     /*
     例：
     public String toLogin(){
