@@ -18,7 +18,7 @@ class Analyze implements IType, IError {
         return new ErrorTask();
     }
 
-    //获取类型
+    //获取类型 -> 执行Task
     private static ITask getTask(Message m) {
         //判断消息类型
         switch (m.getType()) {
@@ -28,7 +28,13 @@ class Analyze implements IType, IError {
             //登陆消息
             case TYPE_LOGIN:
                 System.out.println("登录消息");
-                return new LoginTask();
+                return new PasswordLoginTask();
+            case TYPE_LOGIN_TOKEN:
+                System.out.println("token登录消息");
+                return new TokenLoginTask();
+            case TYPE_LOGIN_VC:
+                System.out.println("vc登录消息");
+                return null;
             //注册消息
             case TYPE_REGISTER:
                 System.out.println("注册消息");
@@ -51,7 +57,7 @@ class Analyze implements IType, IError {
         return null;
     }
 
-    //解析字段函数 -> 分解为MsgInfo ->转变为各自的类
+    //解析字段函数 -> 分解为Message -> 返回整合后的Message
     static Message getMessage(String text) {
         String[] strs = text.split("&");
         Message me = new Message();
@@ -89,6 +95,10 @@ class Analyze implements IType, IError {
                         break;
                     case STRING_UID:
                         me.setUid(value);
+                        break;
+                    case STRING_TOKEN:
+                        me.setToken(value);
+                        break;
                     default:
                         break;
                 }
@@ -110,13 +120,17 @@ class Analyze implements IType, IError {
         switch (mi.getType()) {
             //登录信息
             case TYPE_LOGIN:
-                //用户注册信息
                 return mi.isAccountExist() && mi.isPasswordExist();
+            case TYPE_LOGIN_TOKEN:
+                return mi.isUIDExist() && mi.isTokenExist();
+            case TYPE_LOGIN_VC:
+                return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist());
+            //用户注册信息
             case TYPE_REGISTER:
                 return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist() && mi.isPasswordExist());
             //用户转发信息
             case TYPE_RELAY:
-                return mi.isUIDExist() && mi.isReceiverExist()
+                return mi.isUIDExist() && mi.isReceiverExist() && mi.isTokenExist()
                         && mi.isMsgExist();
             case TYPE_HISTORT:
                 return mi.isUIDExist() && mi.isReceiverExist() && mi.isCursorExist();

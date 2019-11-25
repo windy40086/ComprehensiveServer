@@ -1,19 +1,17 @@
 package control.task;
 
-import control.Channel;
 import db.QueryDao;
 import entity.Message;
 import entity.User;
+import inter.IChannel;
 import inter.ITask;
-import server.ServerAndroid;
-import service.StreamService;
+import server.ChannelServer;
+import service.TokenService;
 import util.Util;
 
-import java.io.IOException;
-
-public class LoginTask implements ITask {
+public class PasswordLoginTask implements ITask {
     @Override
-    public boolean doTask(User u, Message mi) {
+    public boolean doTask(IChannel channel, Message mi) {
         System.out.println("LoginTask");
 
         Message msg = new Message();
@@ -24,24 +22,26 @@ public class LoginTask implements ITask {
         String account = mi.getAccount();
         String password = mi.getPassword();
 
-        //需要判断账号到底是Email还是phone
-
         //判断此account是否已经登录
-        if (false && isUserLogin(account)) {
-            msg.setResult(RESULT_FAIL);
-            msg.setError(ERROR_LOGIN_ACCOUNT_IS_LOGIN);
-            return sendMessage(u, msg.toString());
+        //待修复
+        if (isUserLogin(account)) {
+            System.out.println("账号已经登录,即将更新token");
         }
 
         //通过LoginService服务读取数据库信息
         if (isUserExist(new User(account, password))) {
             //读取成功后设置 channel 的 user
-            u.setAccount(account);
-            u.setPassword(password);
-            u.setId(getUserID(account));
+            channel.getUser().setAccount(account);
+            channel.getUser().setPassword(password);
+            channel.getUser().setId(getUserID(account));
             msg.setResult(RESULT_SUCCESS);
             msg.setError(ERROR_NONE);
             msg.setUid(getUserID(account));
+
+            TokenService.addToken(channel.getUser().getId());
+
+            msg.setToken(TokenService.getToken(channel.getUser().getId()));
+
             System.out.println("登录成功");
         } else {
             //读取失败则返回错误
@@ -49,7 +49,7 @@ public class LoginTask implements ITask {
             msg.setError(ERROR_LOGIN);
             System.out.println("登陆失败");
         }
-        return sendMessage(u, msg.toString());
+        return sendMessage(channel, msg.toString());
     }
 
     //通过User判断数据库是否有此用户
@@ -64,7 +64,7 @@ public class LoginTask implements ITask {
 
     //判断账号是否已经登录
     private static boolean isUserLogin(String account) {
-        for (Channel channel : ServerAndroid.getChannels()) {
+        for (IChannel channel : ChannelServer.getChannels()) {
             if (null != channel.getUserAccount() && channel.getUserAccount().equals(account)) {
                 return true;
             }
@@ -73,13 +73,7 @@ public class LoginTask implements ITask {
     }
 
     //发送登录信息
-    private static boolean sendMessage(User u, String message) {
-        try {
-            StreamService.sendMsg(u.getClient(), message);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private static boolean sendMessage(IChannel channel, String message) {
+       return channel.send(message);
     }
 }

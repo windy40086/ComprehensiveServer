@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class StreamService {
+public class AndroidStreamService {
 
     //发送dos消息
     public static void sendMsg(Socket s, String msg) throws IOException {

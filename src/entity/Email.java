@@ -19,10 +19,9 @@ public class Email {
         this.debug = debug;
     }
 
-
-//    public boolean isDebug() {
-//        return debug;
-//    }
+    public boolean isDebug() {
+        return debug;
+    }
 
     public void setDebug(boolean debug) {
         this.debug = debug;

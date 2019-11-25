@@ -1,12 +1,12 @@
 package control.task;
 
 import entity.Message;
-import entity.User;
+import inter.IChannel;
 import inter.ITask;
 
 public class SystemTask implements ITask {
     @Override
-    public boolean doTask(User u, Message message) {
+    public boolean doTask(IChannel channel, Message message) {
         System.out.println("SystemTask");
         return false;
     }

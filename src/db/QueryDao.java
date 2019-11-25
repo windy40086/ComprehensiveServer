@@ -52,6 +52,26 @@ public class QueryDao implements IType {
         return false;
     }
 
+    //判断uid是否存在
+//    public static synchronized boolean isUIDExist(String uid){
+//        String sql;
+//        Object[] params;
+//        sql = "select * from client where tel = ? and password = ?";
+//        params = new Object[]{u.getAccount(), u.getPassword()};
+//        try {
+//            ResultSet rs = DBUtil.executeQuery(sql, params);
+//
+//            if (null != rs && rs.next()) {
+//                return true;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        } finally {
+//            DBUtil.dbCloseAll();
+//        }
+//    }
+
     //判断账号是否正确
     public static synchronized boolean isAccountCorrect(User u, int type) {
         String sql;

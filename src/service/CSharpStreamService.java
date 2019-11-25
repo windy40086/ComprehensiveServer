@@ -1,4 +1,4 @@
-package CSharp.service;
+package service;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,9 +17,13 @@ public class CSharpStreamService {
 
             dis.read(temp_len, 0, 8);
 
-            int len = Integer.parseInt(new String(temp_len, 0, 8));
+            int len = 0;
+            try {
+                len = Integer.parseInt(new String(temp_len, 0, 8));
+            } catch (Exception ignored) {
+                return "";
+            }
 
-            int msg_len = 0;
 
             byte[] msg = new byte[MAX_SIZE];
 
@@ -33,7 +37,7 @@ public class CSharpStreamService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            System.err.println("CSharp Stream 18");
         }
         return message.toString();
     }
@@ -42,14 +46,13 @@ public class CSharpStreamService {
         try {
             DataOutputStream dos = new DataOutputStream(client.getOutputStream());
             byte[] message = msg.getBytes();
-            String len = message.length + "";
+            StringBuilder len = new StringBuilder(message.length + "");
             while (len.length() < 8) {
-                len = "0" + len;
+                len.insert(0, "0");
             }
             dos.write((len + msg).getBytes());
             dos.flush();
-            client.shutdownOutput();
-            System.out.println("发送完毕");
+            System.out.println("发送完毕:" + msg);
         } catch (IOException e) {
             e.printStackTrace();
         }

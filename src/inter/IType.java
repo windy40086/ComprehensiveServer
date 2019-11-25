@@ -10,6 +10,8 @@ public interface IType {
     //send: requestType=1&result=true/false&error=xxx
     //receive: requestType=1&account=username&password=pass
     String TYPE_LOGIN = "1";
+    String TYPE_LOGIN_VC = "11";
+    String TYPE_LOGIN_TOKEN = "12";
 
     //注册 用户->系统
     //send: requestType=2&result=true/false&error=xxx
@@ -61,7 +63,7 @@ public interface IType {
     String STRING_CURSOR = "cursor";
 
     //hash code
-    String STRING_HASHCODE = "hashcode";
+    String STRING_TOKEN = "token";
     /*
     例：
     public String toLogin(){
@@ -71,7 +73,7 @@ public interface IType {
 
     //注册登录返回result
     String RESULT_SUCCESS = "1";
-    String RESULT_FAIL = "2";
+    String RESULT_FAIL = "0";
 
 
     ///////////////////////////////////////

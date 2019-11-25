@@ -84,7 +84,7 @@ public class EmailService {
 
         // 2. 根据配置创建会话对象, 用于和邮件服务器交互
         Session session = Session.getInstance(props);
-        session.setDebug(false);                                 // 设置为debug模式, 可以查看详细的发送 log
+        session.setDebug(email.isDebug());                                 // 设置为debug模式, 可以查看详细的发送 log
 
         // 3. 创建一封邮件
         // 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）

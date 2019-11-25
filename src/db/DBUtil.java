@@ -1,6 +1,6 @@
 package db;
 
-import entity.*;
+import entity.MysqlConfig;
 import util.XMLUtil;
 
 import java.sql.*;

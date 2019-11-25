@@ -17,6 +17,7 @@ public class Message implements IType, IError {
     private String error = null;
     private String cursor = null;
     private String vc = null;
+    private String token = null;
 
     private String time = null;
 
@@ -180,16 +181,34 @@ public class Message implements IType, IError {
         return error != null;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isTokenExist() {
+        return token != null;
+    }
+
     public String toString() {
         switch (type) {
             case TYPE_SYSTEM:
                 return toSystem();
             case TYPE_LOGIN:
                 return toLogin();
+            case TYPE_LOGIN_TOKEN:
+                return toTokenLogin();
             case TYPE_REGISTER:
                 return toRegister();
             case TYPE_RELAY:
-                return toRelay();
+                if (this.isTokenExist()) {
+                    return toRelaySelf();
+                } else {
+                    return toRelayOther();
+                }
             case TYPE_ERROR:
                 return toError();
             default:
@@ -199,27 +218,65 @@ public class Message implements IType, IError {
 
     //4
     private String toError() {
-        return STRING_TYPE + "=" + type + "&" + STRING_ERR + "=" + error;
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_ERR + "=" + error;
     }
 
     //1
     private String toLogin() {
-        return STRING_TYPE + "=" + type + "&" + STRING_RESULT + "=" + result + "&" + STRING_ERR + "=" + error + "&" + STRING_UID + "=" + uid;
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_TOKEN + "=" + token + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_ERR + "=" + error + "&" +
+                        STRING_UID + "=" + uid;
+    }
+
+    //11
+    private String toTokenLogin(){
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_TOKEN + "=" + token + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_ERR + "=" + error;
     }
 
     //2
     private String toRegister() {
-        return STRING_TYPE + "=" + type + "&" + STRING_RESULT + "=" + result + "&" + STRING_ERR + "=" + error;
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_ERR + "=" + error;
     }
 
     //0
     private String toSystem() {
-        return STRING_TYPE + "=" + type + "&" + STRING_UID + "=" + uid + "&" + STRING_MSG + "=" + msg;
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_UID + "=" + uid + "&" +
+                        STRING_MSG + "=" + msg;
     }
 
     //3
-    private String toRelay() {
-        return STRING_TYPE + "=" + type + "&" + STRING_UID + "=" + uid + "&" + STRING_RECEIVER + "=" + receiver + "&" + STRING_MSG + "=" + msg + "&" + STRING_CURSOR + "=" + cursor;
+    private String toRelayOther() {
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_UID + "=" + uid + "&" +
+                        STRING_RECEIVER + "=" + receiver + "&" +
+                        STRING_TOKEN + "=" + token + "&" +
+                        STRING_CURSOR + "=" + cursor + "&" +
+                        STRING_MSG + "=" + msg;
+    }
+
+    //3
+    private String toRelaySelf() {
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_TOKEN + "=" + token + "&" +
+                        STRING_ERR + "=" + error + "&" +
+                        STRING_CURSOR + "=" + cursor;
     }
 
 }

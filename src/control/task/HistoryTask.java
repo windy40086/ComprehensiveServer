@@ -2,11 +2,12 @@ package control.task;
 
 import entity.Message;
 import entity.User;
+import inter.IChannel;
 import inter.IError;
 import inter.ITask;
 import inter.IType;
 import service.HistoryService;
-import service.StreamService;
+import service.AndroidStreamService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class HistoryTask implements ITask, IType, IError {
     @Override
-    public boolean doTask(User u, Message message) {
+    public boolean doTask(IChannel channel, Message message) {
         System.out.println("HistoryTask");
 
         String uid = message.getUid();
@@ -23,17 +24,11 @@ public class HistoryTask implements ITask, IType, IError {
 
         List<String> messages = getHistory(uid, receiver, cursor);
 
-        return sendObject(u, messages);
+        return sendObject(channel, messages);
     }
 
-    private boolean sendObject(User u, Object messages) {
-        try {
-            StreamService.sendObject(u.getClient(),messages);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private boolean sendObject(IChannel channel, Object messages) {
+        return channel.sendObject(messages);
     }
 
     private ArrayList<String> getHistory(String uid, String receiver, String cursor) {
