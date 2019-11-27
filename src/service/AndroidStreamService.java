@@ -1,6 +1,7 @@
 package service;
 
 import com.sun.corba.se.spi.ior.ObjectKey;
+import util.Log;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,14 +16,14 @@ public class AndroidStreamService {
         DataOutputStream dos = new DataOutputStream(s.getOutputStream());
         dos.writeUTF(msg);
         dos.flush();
-        System.out.println("发送内容：" + msg);
+        Log.d("发送内容：" + msg);
     }
 
     //接受dis消息
     public static String reciMsg(Socket s) throws IOException {
         DataInputStream dis = new DataInputStream(s.getInputStream());
         String msg = dis.readUTF();
-        System.out.println("接受内容：" + msg);
+        Log.d("接受内容：" + msg);
         return msg;
     }
 
@@ -31,6 +32,6 @@ public class AndroidStreamService {
         ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
         oos.writeObject(messages);
         oos.flush();
-        System.out.println("发送内容:" + messages);
+        Log.d("发送内容:" + messages);
     }
 }

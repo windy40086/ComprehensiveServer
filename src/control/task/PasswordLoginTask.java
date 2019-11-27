@@ -7,12 +7,13 @@ import inter.IChannel;
 import inter.ITask;
 import server.ChannelServer;
 import service.TokenService;
+import util.Log;
 import util.Util;
 
 public class PasswordLoginTask implements ITask {
     @Override
     public boolean doTask(IChannel channel, Message mi) {
-        System.out.println("LoginTask");
+        Log.d("LoginTask");
 
         Message msg = new Message();
         //返回的消息为登录信息
@@ -25,7 +26,7 @@ public class PasswordLoginTask implements ITask {
         //判断此account是否已经登录
         //待修复
         if (isUserLogin(account)) {
-            System.out.println("账号已经登录,即将更新token");
+            Log.d("账号已经登录,即将更新token");
         }
 
         //通过LoginService服务读取数据库信息
@@ -42,12 +43,12 @@ public class PasswordLoginTask implements ITask {
 
             msg.setToken(TokenService.getToken(channel.getUser().getId()));
 
-            System.out.println("登录成功");
+            Log.d("登录成功");
         } else {
             //读取失败则返回错误
             msg.setResult(RESULT_FAIL);
             msg.setError(ERROR_LOGIN);
-            System.out.println("登陆失败");
+            Log.e("登陆失败");
         }
         return sendMessage(channel, msg.toString());
     }

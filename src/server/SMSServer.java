@@ -1,5 +1,7 @@
 package server;
 
+import util.Log;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,7 +27,7 @@ public class SMSServer {
         if (Server == null) {
             try {
                 Server = new ServerSocket(Integer.parseInt(port));
-                System.out.println("短信发送服务器打开在：" + Server.getLocalSocketAddress());
+                Log.d("短信发送服务器打开在：" + Server.getLocalSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -38,7 +40,7 @@ public class SMSServer {
             while(true){
                 if(SMSClient == null){
                     SMSClient = Server.accept();
-                    System.out.println("短信发送机已经登录");
+                    Log.d("短信发送机已经登录");
                     dos = new DataOutputStream(SMSClient.getOutputStream());
                 }
             }

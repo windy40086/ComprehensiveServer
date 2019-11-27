@@ -8,6 +8,7 @@ import server.AndroidServer;
 import server.CSharpServer;
 import server.ChannelServer;
 import server.SMSServer;
+import util.Log;
 
 import java.net.Socket;
 
@@ -33,7 +34,7 @@ public class MainThread {
 //            public void run() {
 //                boolean isRunning = true;
 //                int sleep = 10;
-//                System.out.println("短信清洗开启");
+//                Log.d("短信清洗开启");
 //                while (true) {
 //                    try {
 //                        if (!VCService.isVCEmpty()) {
@@ -62,7 +63,7 @@ public class MainThread {
                 IChannel channel = new CSharpChannel(u);
                 ChannelServer.getChannels().add(channel);
 
-                System.out.println(channel + "已经连接");
+                Log.d(channel + "已经连接");
 
                 new Thread(channel).start();
             } catch (Exception e) {
@@ -85,7 +86,7 @@ public class MainThread {
                 IChannel channel = new AndroidChannel(u);
                 ChannelServer.getChannels().add(channel);
 
-                System.out.println(channel + "已经连接");
+                Log.d("已经连接");
 
                 new Thread(channel).start();
             } catch (Exception e) {

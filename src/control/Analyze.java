@@ -5,6 +5,7 @@ import entity.Message;
 import inter.IError;
 import inter.ITask;
 import inter.IType;
+import util.Log;
 
 import java.util.Date;
 
@@ -23,33 +24,33 @@ class Analyze implements IType, IError {
         //判断消息类型
         switch (m.getType()) {
             case TYPE_RELAY:
-                System.out.println("转发消息");
+                Log.d("转发消息");
                 return new RelayTask();
             //登陆消息
             case TYPE_LOGIN:
-                System.out.println("登录消息");
+                Log.d("登录消息");
                 return new PasswordLoginTask();
             case TYPE_LOGIN_TOKEN:
-                System.out.println("token登录消息");
+                Log.d("token登录消息");
                 return new TokenLoginTask();
             case TYPE_LOGIN_VC:
-                System.out.println("vc登录消息");
-                return null;
+                Log.d("vc登录消息");
+                return new VCLoginTask();
             //注册消息
             case TYPE_REGISTER:
-                System.out.println("注册消息");
+                Log.d("注册消息");
                 return new RegisterTask();
             //系统消息
             case TYPE_SYSTEM:
-                System.out.println("系统消息");
+                Log.d("系统消息");
                 return new SystemTask();
             //错误信息
             case TYPE_ERROR:
-                System.out.println("错误消息");
+                Log.d("错误消息");
                 return new ErrorTask();
             //历史消息
             case TYPE_HISTORT:
-                System.out.println("历史消息获取");
+                Log.d("历史消息获取");
                 return new HistoryTask();
             default:
                 break;

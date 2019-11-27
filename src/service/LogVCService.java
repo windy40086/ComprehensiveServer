@@ -1,5 +1,7 @@
 package service;
 
+import util.Log;
+
 import java.util.HashMap;
 
 public class LogVCService {
@@ -31,10 +33,10 @@ public class LogVCService {
     }
 
     public static boolean update_vc(int sleep) {
-        System.out.println("////////////////短信清洗/////////////////");
-        System.out.println("验证码清洗中,所有超过" + sleep + "分钟的验证码都会被清理");
-        System.out.println("目前的验证码:" + verificationCode.toString());
-        System.out.println("/////////////////////////////////////////");
+        Log.d("////////////////短信清洗/////////////////");
+        Log.d("验证码清洗中,所有超过" + sleep + "分钟的验证码都会被清理");
+        Log.d("目前的验证码:" + verificationCode.toString());
+        Log.d("/////////////////////////////////////////");
         return true;
     }
 

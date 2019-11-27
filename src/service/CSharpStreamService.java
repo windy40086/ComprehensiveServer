@@ -1,5 +1,7 @@
 package service;
 
+import util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -52,7 +54,7 @@ public class CSharpStreamService {
             }
             dos.write((len + msg).getBytes());
             dos.flush();
-            System.out.println("发送完毕:" + msg);
+            Log.d("发送完毕:" + msg);
         } catch (IOException e) {
             e.printStackTrace();
         }

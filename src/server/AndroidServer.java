@@ -1,6 +1,7 @@
 package server;
 
 import inter.IChannel;
+import util.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,7 +18,7 @@ public class AndroidServer {
         if (Server == null) {
             try {
                 Server = new ServerSocket(Integer.parseInt(port));
-                System.out.println("Android主服务器打开在：" + Server.getLocalSocketAddress());
+                Log.d("Android主服务器打开在：" + Server.getLocalSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -6,11 +6,12 @@ import inter.ITask;
 import server.ChannelServer;
 import service.HistoryService;
 import service.TokenService;
+import util.Log;
 
 public class RelayTask implements ITask {
     @Override
     public boolean doTask(IChannel channel, Message message) {
-        System.out.println("RelayTask");
+        Log.d("RelayTask");
         //如果用户发送的token和服务器token不合，则拒绝发送消息
         if (null == channel.getUser().getId() || null == message.getToken()) {
             //没有id或token 拒绝发送消息

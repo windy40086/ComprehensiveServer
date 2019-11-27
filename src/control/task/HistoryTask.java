@@ -8,6 +8,7 @@ import inter.ITask;
 import inter.IType;
 import service.HistoryService;
 import service.AndroidStreamService;
+import util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 public class HistoryTask implements ITask, IType, IError {
     @Override
     public boolean doTask(IChannel channel, Message message) {
-        System.out.println("HistoryTask");
+        Log.d("HistoryTask");
 
         String uid = message.getUid();
         String receiver = message.getReceiver();

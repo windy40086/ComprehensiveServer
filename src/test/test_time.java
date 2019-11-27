@@ -8,6 +8,8 @@ public class test_time {
         Date d = new Date();
         SimpleDateFormat dsf = new SimpleDateFormat();
 
+        System.out.println(1/0);
+
         System.out.println(Integer.MAX_VALUE);
     }
 }

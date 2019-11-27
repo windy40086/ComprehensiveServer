@@ -8,6 +8,7 @@ import inter.IType;
 import server.ChannelServer;
 import service.CSharpStreamService;
 import util.CloseUtil;
+import util.Log;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -70,7 +71,7 @@ public class CSharpChannel implements IChannel,Runnable, IType {
     private void disconnection() {
         try {
             this.user.getClient().close();
-            System.out.println(this + "已经断开");
+            Log.d(this + "已经断开");
             ChannelServer.getChannels().remove(this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,8 +104,7 @@ public class CSharpChannel implements IChannel,Runnable, IType {
     @Override
     public void run() {
         while (isRunning) {
-            System.out.println();
-            System.out.println("--------------------------------------------------------------------------------");
+            Log.d("--------------------------------------------------------------------------------");
             String s = receive();
             if (s == null || s.trim().equals("")) {
                 disconnection();
@@ -112,9 +112,9 @@ public class CSharpChannel implements IChannel,Runnable, IType {
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH点mm分ss秒SSSS毫秒");
-            System.out.println(getUserInfo());
-            System.out.println("接收到" + this + "的消息：" + s);
-            System.out.println("时间：" + sdf.format(new Date()));
+            Log.d(getUserInfo());
+            Log.d("接收到" + this + "的消息：" + s);
+            Log.d("时间：" + sdf.format(new Date()));
 
             //处理消息
             ITask task = Analyze.analyze(s);
@@ -123,7 +123,7 @@ public class CSharpChannel implements IChannel,Runnable, IType {
             //执行任务
             boolean isS = task.doTask(this, m);
 
-            System.out.println("发送结果：" + (isS ? "成功" : "失败"));
+            Log.d("发送结果：" + (isS ? "成功" : "失败"));
         }
     }
 }

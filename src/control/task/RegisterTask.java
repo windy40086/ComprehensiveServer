@@ -9,13 +9,14 @@ import inter.ITask;
 import server.SMSServer;
 import service.EmailService;
 import service.RegVCService;
+import util.Log;
 
 import java.util.Random;
 
 public class RegisterTask implements ITask {
     @Override
     public boolean doTask(IChannel channel, Message message) {
-        System.out.println("RegisterTask");
+        Log.d("RegisterTask");
         Message result = register(message);
         return sendMessage(channel,result.toString());
     }
@@ -126,7 +127,7 @@ public class RegisterTask implements ITask {
                 RegVCService.add(mi.getAccount(), vc);
             }
 
-            System.out.println("phone验证码:" + vc);
+            Log.d("phone验证码:" + vc);
             //发送成功
             msg.setResult(RESULT_SUCCESS);
             msg.setError(ERROR_NONE);
@@ -223,7 +224,7 @@ public class RegisterTask implements ITask {
                 RegVCService.add(mi.getAccount(), vc);
             }
 
-            System.out.println("Email验证码:" + vc);
+            Log.d("Email验证码:" + vc);
             //发送成功
             msg.setType(TYPE_REGISTER);
             msg.setResult(RESULT_SUCCESS);

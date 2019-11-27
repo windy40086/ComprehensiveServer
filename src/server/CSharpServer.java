@@ -1,5 +1,7 @@
 package server;
 
+import util.Log;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -14,7 +16,7 @@ public class CSharpServer {
         if (Server == null) {
             try {
                 Server = new ServerSocket(Integer.parseInt(port));
-                System.out.println("CSharp主服务器打开在：" + Server.getLocalSocketAddress());
+                Log.d("CSharp主服务器打开在：" + Server.getLocalSocketAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
