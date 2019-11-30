@@ -86,7 +86,7 @@ public class MainThread {
                 IChannel channel = new AndroidChannel(u);
                 ChannelServer.getChannels().add(channel);
 
-                Log.d("已经连接");
+                Log.d(channel + "已经连接");
 
                 new Thread(channel).start();
             } catch (Exception e) {

@@ -12,6 +12,7 @@ public interface IType {
     String TYPE_LOGIN = "1";
     String TYPE_LOGIN_VC = "11";
     String TYPE_LOGIN_TOKEN = "12";
+    String TYPE_LOGIN_VC_GET = "13";
 
     //注册 用户->系统
     //send: requestType=2&result=true/false&error=xxx
@@ -23,6 +24,8 @@ public interface IType {
     //send: requestType=3&account=username&receiver=username/群ID&msg=xxx
     //receive: requestType=3&account=username&receiver=username/群ID&msg=xxx
     String TYPE_RELAY = "3";
+    //返回值
+    String TYPE_RELAY_REQUEST = "31";
 
     //Error 信息 系统 -> 用户
     //send: requestType=4&error=xxx

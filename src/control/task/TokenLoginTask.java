@@ -15,34 +15,7 @@ public class TokenLoginTask implements ITask, IType, IError {
         String uid = message.getUid();
         Message result = new Message();
         result.setType(TYPE_LOGIN_TOKEN);
-        //如果有user id，则不能用Token
-//        if(null != u.getId()){
-//            result.setResult(RESULT_FAIL);
-//            result.setError(ERROR_LOGIN_UID_IS_EXIST);
-//            sendMessage(u, result.toString());
-//            return false;
-//        }
-        //uid 不存在
-//        if(!u.getId().equals(message.getUid())){
-//            result.setResult(RESULT_FAIL);
-//            result.setError(IError.ERROR_LOGIN_UID_IS_WRONG);
-//            sendMessage(u, result.toString());
-//            return false;
-//        }
-        //user没有token
-//        if (token == null) {
-//            result.setResult(RESULT_FAIL);
-//            result.setError(ERROR_LOGIN_TOKEN_NOT_EXIST);
-//            sendMessage(u, result.toString());
-//            return false;
-//        }
-        //user的token不正确
-//        if (!token.equals(TokenService.getToken(uid))) {
-//            result.setResult(RESULT_FAIL);
-//            result.setError(ERROR_LOGIN_TOKEN_IS_WRONG);
-//            sendMessage(u, result.toString());
-//            return false;
-//        }
+
         //user的token正确
         if (TokenService.checkToken(uid, token)) {
             channel.getUser().setId(uid);
@@ -54,6 +27,10 @@ public class TokenLoginTask implements ITask, IType, IError {
             result.setToken(TokenService.getToken(uid));
             sendMessage(channel, result.toString());
             return true;
+        } else {
+            result.setResult(RESULT_FAIL);
+            result.setError(ERROR_LOGIN_TOKEN_IS_WRONG);
+            sendMessage(channel, result.toString());
         }
         return false;
     }

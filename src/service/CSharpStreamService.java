@@ -26,7 +26,6 @@ public class CSharpStreamService {
                 return "";
             }
 
-
             byte[] msg = new byte[MAX_SIZE];
 
             while (len != 0) {
@@ -39,7 +38,7 @@ public class CSharpStreamService {
                 }
             }
         } catch (Exception e) {
-//            System.err.println("CSharp Stream 18");
+            System.err.println("CSharp Stream 18");
         }
         return message.toString();
     }

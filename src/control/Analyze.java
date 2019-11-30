@@ -36,6 +36,9 @@ class Analyze implements IType, IError {
             case TYPE_LOGIN_VC:
                 Log.d("vc登录消息");
                 return new VCLoginTask();
+            case TYPE_LOGIN_VC_GET:
+                Log.d("vc成功登录");
+                return new VCLoginTask();
             //注册消息
             case TYPE_REGISTER:
                 Log.d("注册消息");
@@ -125,7 +128,9 @@ class Analyze implements IType, IError {
             case TYPE_LOGIN_TOKEN:
                 return mi.isUIDExist() && mi.isTokenExist();
             case TYPE_LOGIN_VC:
-                return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist());
+                return (mi.isAccountExist());
+            case TYPE_LOGIN_VC_GET:
+                return (mi.isAccountExist() && mi.isVCExist());
             //用户注册信息
             case TYPE_REGISTER:
                 return (mi.isAccountExist()) || (mi.isAccountExist() && mi.isVCExist() && mi.isPasswordExist());

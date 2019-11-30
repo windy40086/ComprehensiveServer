@@ -201,14 +201,16 @@ public class Message implements IType, IError {
                 return toLogin();
             case TYPE_LOGIN_TOKEN:
                 return toTokenLogin();
+            case TYPE_LOGIN_VC:
+                return toVCLogin();
+            case TYPE_LOGIN_VC_GET:
+                return toVCALogin();
             case TYPE_REGISTER:
                 return toRegister();
             case TYPE_RELAY:
-                if (this.isTokenExist()) {
-                    return toRelaySelf();
-                } else {
-                    return toRelayOther();
-                }
+                return toRelayOther();
+            case TYPE_RELAY_REQUEST:
+                return toRelaySelf();
             case TYPE_ERROR:
                 return toError();
             default:
@@ -234,7 +236,26 @@ public class Message implements IType, IError {
     }
 
     //11
-    private String toTokenLogin(){
+    private String toVCLogin() {
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_VC + "=" + vc + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_ERR + "=" + error;
+    }
+
+    //13
+    private String toVCALogin(){
+        return
+                STRING_TYPE + "=" + type + "&" +
+                        STRING_UID + "=" + uid + "&" +
+                        STRING_TOKEN + "=" + token + "&" +
+                        STRING_RESULT + "=" + result + "&" +
+                        STRING_ERR + "=" + error;
+    }
+
+    //12
+    private String toTokenLogin() {
         return
                 STRING_TYPE + "=" + type + "&" +
                         STRING_TOKEN + "=" + token + "&" +
@@ -278,5 +299,4 @@ public class Message implements IType, IError {
                         STRING_ERR + "=" + error + "&" +
                         STRING_CURSOR + "=" + cursor;
     }
-
 }

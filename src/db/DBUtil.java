@@ -24,9 +24,15 @@ public class DBUtil {
         static Connection getCon() {
             if (connect == null) {
                 try {
-                    connect = DriverManager.getConnection(URL + DataBase + "?serverTimezone=CTT", U, P);
+                    connect = DriverManager.getConnection(URL + DataBase + "?autoReconnect=true&useSSL=false&serverTimezone=CTT", U, P);
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    try {
+                        connect.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    connect = null;
                 }
             }
             return connect;

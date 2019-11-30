@@ -11,7 +11,6 @@ create table client(
 	email varchar(50) default '',
     tel varchar(50) default '',
     password varchar(50) not null,
-	hashcode varchar(20) not null,
     
     jurisdiction int,
     profile_photo varchar(200) default '',

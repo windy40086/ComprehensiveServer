@@ -15,6 +15,11 @@ public class RelayTask implements ITask {
         //如果用户发送的token和服务器token不合，则拒绝发送消息
         if (null == channel.getUser().getId() || null == message.getToken()) {
             //没有id或token 拒绝发送消息
+            Message m = new Message();
+            m.setType(TYPE_ERROR);
+            m.setResult(RESULT_FAIL);
+            m.setError(ERROR_RELAY_TOKEN_IS_EXPIRATION);
+            send(channel, m.toString());
             return false;
         }
         if (!TokenService.getToken(channel.getUser().getId()).equals(message.getToken())) {
@@ -39,7 +44,10 @@ public class RelayTask implements ITask {
         guest.setMsg("您还未注册，无法接受消息");
 
         //返回发送端消息
+        message.setType(TYPE_RELAY_REQUEST);
         send(channel, message.toString());
+
+        message.setType(TYPE_RELAY);
         message.setToken(null);
         ////////////////////////////////////////////////////////////////////
         //如果Receiver是系统大群
@@ -47,9 +55,6 @@ public class RelayTask implements ITask {
             boolean isSuccess = false;
             for (IChannel other : ChannelServer.getChannels()) {
                 //跳过自己
-//                if (null != other.getUserId() && other.getUserId().equals(channel.getUser().getId())) {
-//                    continue;
-//                }
                 if (other == channel) {
                 }
                 //发送给所有登录的人
@@ -88,6 +93,8 @@ public class RelayTask implements ITask {
         msg.setReceiver(mi.getReceiver());
         msg.setMsg(mi.getMsg());
         msg.setToken(mi.getToken());
+        msg.setResult(RESULT_SUCCESS);
+        msg.setError(ERROR_NONE);
 
         //通过Account | Receiver记录历史记录
         HistoryService.insertHM(msg.getUid(), msg.getReceiver(), msg.getMsg(), msg.getType());

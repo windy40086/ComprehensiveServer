@@ -36,17 +36,17 @@ public class SMSServer {
     }
 
     private static void getCon() {
-        try {
-            while(true){
+        while(true){
+            try{
                 if(SMSClient == null){
                     SMSClient = Server.accept();
                     Log.d("短信发送机已经登录");
                     dos = new DataOutputStream(SMSClient.getOutputStream());
                 }
+            }catch (Exception e){
+                SMSClient = null;
+                System.out.println("短信机断线");
             }
-        } catch (IOException e) {
-            SMSClient = null;
-            e.printStackTrace();
         }
     }
 
@@ -61,7 +61,7 @@ public class SMSServer {
             return true;
         } catch (IOException e) {
             SMSClient = null;
-            e.printStackTrace();
+            System.out.println("短信机断线");
         }
         return false;
     }
